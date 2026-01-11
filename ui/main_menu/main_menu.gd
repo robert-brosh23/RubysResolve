@@ -35,12 +35,16 @@ func _ready() -> void:
 	credits_menu_screen.visible = false
 	
 func _reset_sliders():
+	if GameManager.debug_enabled:
+		AudioPlayer.music_volume = -40
+		
 	master_volume_slider.value = AudioPlayer.master_volume
 	_on_master_volume_slider_value_changed(master_volume_slider.value)
 	music_volume_slider.value = AudioPlayer.music_volume
 	_on_music_volume_slider_value_changed(music_volume_slider.value)
 	sfx_volume_slider.value = AudioPlayer.sfx_volume
 	_on_sfx_volume_slider_value_changed(sfx_volume_slider.value)
+	
 	
 func _on_start_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://ui/tutorial_scene/tutorial_scene.tscn")

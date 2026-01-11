@@ -1,10 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://csdmhd25lpc0t"]
+[gd_scene load_steps=12 format=3 uid="uid://csdmhd25lpc0t"]
 
 [ext_resource type="Script" uid="uid://dnck5k1v8qlla" path="res://game_manager/game_manager.gd" id="1_ong7i"]
 [ext_resource type="Script" uid="uid://bevi4n8n1jvud" path="res://card/card_data/card_data.gd" id="2_q7vcu"]
 [ext_resource type="Resource" uid="uid://bstx5n1bv73t2" path="res://card/card_data/cards/creativity/grind.tres" id="5_2631c"]
+[ext_resource type="Resource" uid="uid://7lum1rtwco8m" path="res://card/card_data/cards/wisdom/friendship.tres" id="5_d3erd"]
+[ext_resource type="Resource" uid="uid://mkwygcciqnja" path="res://card/card_data/cards/creativity/inspired_wisdom.tres" id="6_eesdg"]
 [ext_resource type="Resource" uid="uid://cuyftbvj6fopp" path="res://card/card_data/cards/obstacle/sleep_deprived.tres" id="6_kkxic"]
 [ext_resource type="Resource" uid="uid://bc6kekq6f0g7t" path="res://card/card_data/cards/wisdom/touch_grass.tres" id="7_d3erd"]
+[ext_resource type="Resource" uid="uid://jst3o7qyg677" path="res://card/card_data/cards/creativity/inspired_creativity.tres" id="7_eesdg"]
+[ext_resource type="Resource" uid="uid://hbsxvkq72uke" path="res://card/card_data/cards/obstacle/forgot_my_lunch.tres" id="7_qs53i"]
+[ext_resource type="Resource" uid="uid://dubw1i8dw6h3h" path="res://card/card_data/cards/logic/brain_blast.tres" id="7_r63pj"]
 [ext_resource type="Resource" uid="uid://dt73u1mt8nnfn" path="res://card/card_data/cards/obstacle/anxiety.tres" id="8_fjsdi"]
 
 [node name="GameManager" type="Control" groups=["game_manager"]]
@@ -15,4 +20,5 @@ anchor_left = 1.0
 anchor_right = 1.0
 grow_horizontal = 0
 script = ExtResource("1_ong7i")
-card_data_debug = Array[ExtResource("2_q7vcu")]([ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("8_fjsdi"), ExtResource("6_kkxic"), ExtResource("6_kkxic"), ExtResource("6_kkxic"), ExtResource("7_d3erd")])
+card_data_debug = Array[ExtResource("2_q7vcu")]([ExtResource("7_r63pj"), ExtResource("7_eesdg"), ExtResource("5_d3erd"), ExtResource("6_eesdg"), ExtResource("7_qs53i"), ExtResource("7_qs53i")])
+card_data_actual_starting = Array[ExtResource("2_q7vcu")]([ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("7_d3erd"), ExtResource("6_kkxic"), ExtResource("6_kkxic"), ExtResource("6_kkxic"), ExtResource("8_fjsdi")])

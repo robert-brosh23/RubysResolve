@@ -27,7 +27,7 @@ func enqueue_create_card(card_data: CardData) -> Signal:
 	var result_signal = promise_queue.enqueue_delay(.2)
 	return result_signal
 	
-func _create_card(card_data: CardData, spawn_pos: Vector2 = Vector2(300,100), pause_time := 0, discard := false) -> Card:
+func _create_card(card_data: CardData, spawn_pos: Vector2 = Vector2(300,100), pause_time := 0.0, discard := false) -> Card:
 	AudioPlayer.play_sound(sound_discard_card)
 	var card = Card.create_card(card_data)
 	card.global_position = spawn_pos
@@ -56,12 +56,18 @@ func enqueue_draw_card_from_deck() -> void:
 	promise_queue.enqueue_delay(.2)
 	
 func draw_card_from_deck() -> void:
-	AudioPlayer.play_sound(sound_draw_card)
+	if deck == null:
+		return
 	var card = await deck.draw_card()
 	if card == null:
 		return
 	hand.add_card(card)
 	hours_tracker._check_cards_playable(null, null)
+	
+func peek_at_top_card_of_deck() -> Card:
+	if CardsCollection.cards_in_deck.is_empty() and !CardsCollection.cards_in_discard_pile.is_empty():
+		await move_cards_from_discard_pile_to_deck_and_shuffle()
+	return deck.peek_top_card()
 
 func enqueue_draw_multiple_cards(num_cards: int) -> void:
 	for i in range(0, num_cards):
@@ -85,6 +91,7 @@ func enqueue_shuffle_deck() -> Signal:
 	
 func _shuffle_deck() -> void:
 	hours_tracker.big_arrow_enabled = false
+	promise_queue.paused += 1
 	await get_tree().create_timer(0.5).timeout
 	AudioPlayer.play_sound(shuffle_sfx)
 	deck.shuffling_label.visible = true
@@ -92,6 +99,7 @@ func _shuffle_deck() -> void:
 	await get_tree().create_timer(1.0).timeout
 	deck.shuffling_label.visible = false
 	hours_tracker.big_arrow_enabled = true
+	promise_queue.paused -= 1
 
 
 # HAND FUNCTIONS
@@ -102,8 +110,13 @@ func enqueue_play_card(card: Card, target: Project = null) -> bool:
 	var result = await result_signal
 	return result
 
-func _play_card(card: Card, target: Project = null) -> bool:
-	var result = card.play_card(target)
+func _play_card(card: Card, target = null) -> bool:
+	if target == null and typeof(target) != TYPE_NIL:
+		print("Project was previously freed.")
+		hand.return_card(card)
+		return false
+		
+	var result = await card.play_card(target)
 	if result == true:
 		if card == null || card.state == Card.states.DELETING:
 			return true
@@ -140,7 +153,11 @@ func enqueue_discard_all_cards_from_hand() -> Signal:
 	
 func _discard_all_cards_from_hand() -> void:
 	while !CardsCollection.cards_in_hand.is_empty():
-		var card = hand.remove_card_from_hand(CardsCollection.cards_in_hand.front())
+		var card = CardsCollection.cards_in_hand.front()
+		if GameManager.state == GameManager.states.ENDING_DAY:
+			await card.dusk_card_effect()
+			
+		hand.remove_card_from_hand(card)
 		AudioPlayer.play_sound(sound_discard_card)
 		card.state = Card.states.NOT_IN_HAND
 		discard_pile.add_card(card)
@@ -167,10 +184,10 @@ func receiving_input() -> bool:
 	return GameManager.receiving_input
 	
 func pause_queue() -> void:
-	promise_queue.paused = true
+	promise_queue.paused += 1
 	
 func unpause_queue() -> void:
-	promise_queue.paused = false
+	promise_queue.paused -= 1
 	
 func reset():
 	promise_queue.clear_queue()

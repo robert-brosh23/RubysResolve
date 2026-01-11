@@ -25,16 +25,16 @@ var progress_tracker : ProgressTracker
 var hand: Hand
 var cursor: Cursor
 
-static func create_project(template: ProjectResource) -> Project:
+static func create_project(_template: ProjectResource) -> Project:
 	var instance: Project = preload("res://projects/project.tscn").instantiate()
-	instance.init(template)
+	instance.init(_template)
 	return instance
 
-func init(template: ProjectResource):
+func init(_template: ProjectResource):
 	animation_player.play("spawn_project")
-	self.template = template
-	target_progress = template.targetProgress
-	title_text.text = template.displayName + "\n(" + str(current_progress) + "/" + str(target_progress) + " done)"
+	self.template = _template
+	target_progress = _template.targetProgress
+	title_text.text = _template.displayName + "\n(" + str(current_progress) + "/" + str(target_progress) + " done)"
 	progress_bar.max_value = target_progress
 	progress_bar.value = 0
 	current_progress = 0
@@ -45,17 +45,25 @@ func init(template: ProjectResource):
 	active = true
 	projectStarted.emit()
 	
-func progress(progress_amount: int):
+## Progress the project by amount. Returns whether or not the project was completed.
+func progress(progress_amount: int) -> bool:
 	# If it's already completed and currently clearing
+	# TODO: I don't think this is needed anymore
 	if current_progress == target_progress:
-		return
-		
+		return false
+	
+	var promise_queue : PromiseQueue = GameManager.promise_queue
+	promise_queue.paused += 1
 	progress_bar.max_value = target_progress
 	current_progress = clamp(current_progress + progress_amount, 0, target_progress)
 	progress_bar.set_value(current_progress)
 	title_text.text = template.displayName + "\n(" + str(current_progress) + "/" + str(target_progress) + " done)"
 	if current_progress == target_progress:
-		_project_completed()
+		await _project_completed()
+		promise_queue.paused -= 1
+		return true
+	promise_queue.paused -= 1
+	return false
 		
 func set_progress(progress_amount: int):
 	progress(progress_amount - current_progress)
@@ -77,9 +85,11 @@ func _project_completed():
 		return
 	
 	print("project ", template.displayName, " completed.")
-	# animation_player.play("destroy_project")
+	
 	active = false
 	projectFinished.emit()
+	await SignalBus.reward_choice_made
+	queue_free()
 	
 func _toggle_fill_bar_border_right(present: bool):
 	var sb := progress_bar.get("theme_override_styles/fill") as StyleBoxFlat

@@ -6,12 +6,9 @@
 [resource]
 script = ExtResource("1_3slth")
 card_name = "New Day"
-card_cost = 3
+card_cost = 2
 card_png = ExtResource("1_0py68")
-card_description = "Set stress to 3."
+card_description = "Draw 2 cards, discarding those that are obstacles."
 card_type = 2
-card_effect = 0
-title_font = 1
-desc_line_spacing = -2
 card_title_offset = 4
 metadata/_custom_type_script = "uid://bevi4n8n1jvud"

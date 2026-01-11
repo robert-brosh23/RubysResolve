@@ -5,9 +5,11 @@ extends Control
 @export var hand: Hand
 @export var discard_pile: DiscardPile
 
-@export var debug_enabled : bool
+var debug_enabled : bool
 
 func _ready() -> void:
+	debug_enabled = GameManager.debug_enabled
+	
 	GameManager.reset()
 	CardsCollection.reset()
 	CardsController.reset()

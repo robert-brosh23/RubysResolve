@@ -10,6 +10,8 @@ signal start_card_played(card: Card, target: Project)
 signal card_played(card: Card, target: Project)
 signal card_played_chained(card: Card, target: Project)
 
+signal reward_choice_made(choice: Variant)
+
 signal node_hovered(node: Node)
 signal node_stop_hovered(node: Node)
 

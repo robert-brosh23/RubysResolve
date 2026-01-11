@@ -13,6 +13,7 @@ const NUM_CARD_CHOICES = 3
 @export var obstacle_cards_resource_preloader: ResourcePreloader
 
 var resolve_manager : ResolveManager
+var promise_queue : PromiseQueue
 
 var logic_card_resources_pool: Array[Resource]
 var creativity_card_resources_pool : Array[Resource]
@@ -101,6 +102,7 @@ func resolve_picked(resolve_preview: ResolvePreview):
 	visible = false
 	if resolve_preview != null:
 		resolve_manager.add_resolve(resolve_preview.resolve_data)
+		SignalBus.reward_choice_made.emit(resolve_preview.resolve_data)
 	
 	curr_resolve_choices.clear()
 
@@ -140,8 +142,12 @@ func preview_cards(data: ProjectResource):
 func card_picked(card: Card):
 	visible = false
 	if card != null:
+		promise_queue = GameManager.promise_queue
+		promise_queue.paused += 1
 		CardsController._create_card(card.card_data, card.global_position)
 		CardsController._shuffle_deck()
+		promise_queue.unpause_after_delay(3)
+		SignalBus.reward_choice_made.emit()
 	
 	curr_choices.clear()
 	for child in cards_hbox_container.get_children():
@@ -173,6 +179,7 @@ func _load_cards(preloader: ResourcePreloader) -> Array[Resource]:
 func _on_skip_button_pressed() -> void:
 	resolve_picked(null)
 	card_picked(null)
+	SignalBus.reward_choice_made.emit(null)
 
 func _on_skip_button_mouse_entered() -> void:
 	SignalBus.node_hovered.emit(skip_button)

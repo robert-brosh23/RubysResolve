@@ -30,7 +30,7 @@ class Deadline:
 
 
 func _ready() -> void:
-	stress_accumulation_bar.max_value = GameManager.MAX_STRESS
+	stress_accumulation_bar.max_value = GameManager.MAX_STRESS_ACCUMULATION
 	stress_accumulation_bar.value = 0
 	cursor = get_tree().get_first_node_in_group("cursor")
 	initialize_deadlines()
@@ -49,8 +49,8 @@ func set_stress_accumulation_bar(target_value: int):
 	var curr_value := stress_accumulation_bar.value
 	while curr_value != target_value:
 		curr_value += 1
-		await _tween_progress_bar(stress_accumulation_bar, curr_value, .25)
-		stress_accumulation_label.text = str(int(curr_value)) + "/10"
+		await _tween_progress_bar(stress_accumulation_bar, curr_value, .025)
+		stress_accumulation_label.text = str(int(curr_value)) + "/" + str(GameManager.MAX_STRESS_ACCUMULATION)
 	shake_stress_label = false
 	set_stress_label(GameManager.stress)
 		

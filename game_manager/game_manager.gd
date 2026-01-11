@@ -2,9 +2,12 @@ extends Control
 
 const STARTING_HOURS := 8
 const MAX_STRESS := 10
-const MAX_STRESS_ACCUMULATION := 10
+const MAX_STRESS_ACCUMULATION := 100
 
 @export var card_data_debug: Array[CardData]
+@export var debug_enabled: bool
+
+@export var card_data_actual_starting: Array[CardData]
 
 var main_ui: MainUi
 var card_rewards_menu: CardRewardsMenu
@@ -13,6 +16,9 @@ var projects_manager: ProjectsManager
 var receiving_input = true
 var hours_tracker: HoursTracker
 var cursor: Cursor
+var state: states = states.DEFAULT
+
+enum states {DEFAULT, ENDING_DAY}
 
 var gain_obstacle_sound : Resource = preload("res://audio/sfx/253174__suntemple__retro-you-lose-sfx.wav")
 
@@ -23,7 +29,7 @@ var score: int = 0:
 
 var stress: int:
 	set(value):
-		stress = clamp(value, 1, MAX_STRESS)
+		stress = clamp(value, 1, 999)
 		main_ui.set_stress_label(stress)
 
 var stress_accumulation: int = 0
@@ -53,7 +59,7 @@ func ready() -> void:
 	score = 0
 	stress_accumulation = 0
 	hours = STARTING_HOURS
-	stress = 4
+	stress = 40
 	day = 1
 	promise_queue = CardsController.promise_queue
 	
@@ -62,7 +68,11 @@ func ready() -> void:
 		var resource := await projects_manager.get_project_resource(i)
 		projects_manager._create_project(resource, i)
 		
-	await CardsController.enqueue_create_cards(card_data_debug)
+	if debug_enabled:
+		await CardsController.enqueue_create_cards(card_data_debug)
+	else:
+		await CardsController.enqueue_create_cards(card_data_actual_starting)
+		
 	await CardsController.enqueue_shuffle_deck()
 	CardsController.enqueue_draw_multiple_cards(5)
 	receiving_input = true
@@ -70,8 +80,10 @@ func ready() -> void:
 func go_to_next_day() -> void:
 	receiving_input = false
 	hours_tracker.big_arrow_enabled = false
+	promise_queue.enqueue(func(): state = states.ENDING_DAY)
 	await CardsController.enqueue_discard_all_cards_from_hand()
 	await _set_stress_accumulation(stress_accumulation + stress)
+	promise_queue.enqueue(func(): state = states.DEFAULT)
 	day += 1
 	main_ui.set_score_label(score)
 	

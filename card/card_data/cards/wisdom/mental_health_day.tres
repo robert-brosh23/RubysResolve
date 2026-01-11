@@ -6,9 +6,9 @@
 [resource]
 script = ExtResource("1_gtaqq")
 card_name = "Self Care Day"
-card_cost = 8
+card_cost = 6
 card_png = ExtResource("1_giui8")
-card_description = "Lower stress by 3 and delete all obstacle cards in your hand."
+card_description = "Delete all obstacle cards in your hand, then delete this card."
 card_type = 2
 card_effect = 8
 title_font = 0

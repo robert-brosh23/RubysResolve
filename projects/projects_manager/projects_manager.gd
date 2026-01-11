@@ -174,14 +174,12 @@ func _project_finished(project: Project):
 	var grid_index = projects.find(project)
 	var data := project.template
 	projects.erase(project)
-	project.queue_free()
 	card_rewards_menu.preview_rewards(data)
 	if project.template.type == ProjectResource.project_type.OBSTACLE:
 		resolution_projects_finished += 1
 	else:
 		projects_finished += 1
 	
-	#await get_tree().create_timer(1.0).timeout
 	var resource = get_project_resource(grid_index)
 	_create_project(resource, grid_index)
 		

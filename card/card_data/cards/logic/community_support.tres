@@ -6,12 +6,10 @@
 [resource]
 script = ExtResource("1_1ax7l")
 card_name = "Community Supprt"
-card_cost = 3
+card_cost = 1
 card_png = ExtResource("1_453xj")
 card_description = "The next card you play today is played twice."
-card_type = 0
 card_effect = 13
 title_font = 0
-desc_line_spacing = -2
 card_title_offset = 10
 metadata/_custom_type_script = "uid://bevi4n8n1jvud"

@@ -6,12 +6,10 @@
 [resource]
 script = ExtResource("1_o4whq")
 card_name = "Therapy"
-card_cost = 2
+card_cost = 4
 card_png = ExtResource("1_p5lof")
-card_description = "Choose an obstacle in your hand and delete it."
+card_description = "Delete a random obstacle in your hand."
 card_type = 2
 card_effect = 16
-title_font = 1
-desc_line_spacing = -2
 card_title_offset = 7
 metadata/_custom_type_script = "uid://bevi4n8n1jvud"

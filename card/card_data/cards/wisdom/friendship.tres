@@ -6,12 +6,11 @@
 [resource]
 script = ExtResource("1_f5i0t")
 card_name = "Friendship"
-card_cost = 4
+card_cost = 3
 card_png = ExtResource("1_j15w1")
-card_description = "Reduce stress by 1, then reduce the cost of this card by 1."
+card_description = "Reduce stress by 15%, then permanently increase this amount by 3%."
 card_type = 2
 card_effect = 9
-title_font = 1
-desc_line_spacing = -2
+desc_line_spacing = -3
 card_title_offset = 6
 metadata/_custom_type_script = "uid://bevi4n8n1jvud"

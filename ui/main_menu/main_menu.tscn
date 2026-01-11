@@ -8,19 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://dagov7j5innlu" path="res://sprites/volume_knob.png" id="4_3c04x"]
 [ext_resource type="Texture2D" uid="uid://cqn35pmfldhb1" path="res://sprites/title_screen_goo_layer.png" id="4_6mijq"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i5wg5"]
-bg_color = Color(0.203922, 0.67451, 0.729412, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.45098, 0.27451, 0.298039, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-anti_aliasing = false
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3c04x"]
 bg_color = Color(0.933333, 0.415686, 0.486275, 1)
 border_width_left = 4
@@ -35,6 +22,19 @@ corner_radius_bottom_left = 4
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_joh67"]
+bg_color = Color(0.203922, 0.67451, 0.729412, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.45098, 0.27451, 0.298039, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i5wg5"]
 bg_color = Color(0.203922, 0.67451, 0.729412, 1)
 border_width_left = 4
 border_width_top = 4
@@ -123,7 +123,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/MainMenuScreen"]
-layout_mode = 2
+layout_mode = 0
 offset_left = -71.0
 offset_top = -14.0
 offset_right = 569.0
@@ -133,7 +133,7 @@ texture = ExtResource("2_u184e")
 
 [node name="StartButton" type="Button" parent="CanvasLayer/MainMenuScreen"]
 custom_minimum_size = Vector2(120, 60)
-layout_mode = 2
+layout_mode = 0
 anchor_left = -0.0703125
 anchor_top = 0.389111
 anchor_right = -0.0703125
@@ -141,24 +141,24 @@ anchor_bottom = 0.389111
 offset_top = -0.0800018
 offset_right = 150.0
 offset_bottom = 175.92
-theme_override_colors/font_hover_pressed_color = Color(1, 0.905882, 0.839216, 1)
-theme_override_colors/font_hover_color = Color(1, 0.905882, 0.839216, 1)
-theme_override_colors/font_outline_color = Color(0.45098, 0.27451, 0.298039, 1)
 theme_override_colors/font_color = Color(1, 0.905882, 0.839216, 1)
 theme_override_colors/font_pressed_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_outline_color = Color(0.45098, 0.27451, 0.298039, 1)
 theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("2_omy8q")
 theme_override_font_sizes/font_size = 36
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i5wg5")
-theme_override_styles/hover = SubResource("StyleBoxFlat_3c04x")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_joh67")
 theme_override_styles/normal = SubResource("StyleBoxFlat_3c04x")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_joh67")
+theme_override_styles/hover = SubResource("StyleBoxFlat_3c04x")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i5wg5")
 text = "Start
 Game "
 metadata/_edit_use_anchors_ = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenuScreen"]
-layout_mode = 2
+layout_mode = 0
 offset_left = 320.0
 offset_top = 360.0
 offset_right = 320.0
@@ -168,31 +168,31 @@ size_flags_vertical = 8
 
 [node name="Options" type="Button" parent="CanvasLayer/MainMenuScreen"]
 custom_minimum_size = Vector2(150, 60)
-layout_mode = 2
+layout_mode = 0
 anchor_left = 0.24375
 anchor_top = 0.711111
 anchor_right = 0.24375
 anchor_bottom = 0.711111
 offset_right = 150.0
 offset_bottom = 60.0
-theme_override_colors/font_hover_pressed_color = Color(1, 0.905882, 0.839216, 1)
-theme_override_colors/font_hover_color = Color(1, 0.905882, 0.839216, 1)
-theme_override_colors/font_outline_color = Color(0.45098, 0.27451, 0.298039, 1)
 theme_override_colors/font_color = Color(1, 0.905882, 0.839216, 1)
 theme_override_colors/font_pressed_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_outline_color = Color(0.45098, 0.27451, 0.298039, 1)
 theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("2_omy8q")
 theme_override_font_sizes/font_size = 36
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i5wg5")
-theme_override_styles/hover = SubResource("StyleBoxFlat_3c04x")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_joh67")
 theme_override_styles/normal = SubResource("StyleBoxFlat_3c04x")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_joh67")
+theme_override_styles/hover = SubResource("StyleBoxFlat_3c04x")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i5wg5")
 text = " Options "
 metadata/_edit_use_anchors_ = true
 
 [node name="Credits" type="Button" parent="CanvasLayer/MainMenuScreen"]
 custom_minimum_size = Vector2(150, 60)
-layout_mode = 2
+layout_mode = 0
 anchor_left = 0.550125
 anchor_top = 0.711111
 anchor_right = 0.550125
@@ -201,19 +201,19 @@ offset_left = -0.0800171
 offset_top = -3.05176e-05
 offset_right = 149.92
 offset_bottom = 60.0
-theme_override_colors/font_hover_pressed_color = Color(1, 0.905882, 0.839216, 1)
-theme_override_colors/font_hover_color = Color(1, 0.905882, 0.839216, 1)
-theme_override_colors/font_outline_color = Color(0.45098, 0.27451, 0.298039, 1)
 theme_override_colors/font_color = Color(1, 0.905882, 0.839216, 1)
 theme_override_colors/font_pressed_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_outline_color = Color(0.45098, 0.27451, 0.298039, 1)
 theme_override_constants/outline_size = 10
 theme_override_constants/h_separation = 0
 theme_override_fonts/font = ExtResource("2_omy8q")
 theme_override_font_sizes/font_size = 36
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i5wg5")
-theme_override_styles/hover = SubResource("StyleBoxFlat_3c04x")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_joh67")
 theme_override_styles/normal = SubResource("StyleBoxFlat_3c04x")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_joh67")
+theme_override_styles/hover = SubResource("StyleBoxFlat_3c04x")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i5wg5")
 text = " Credits "
 metadata/_edit_use_anchors_ = true
 
@@ -256,18 +256,18 @@ horizontal_alignment = 1
 [node name="CreditsReturnToMain" type="Button" parent="CanvasLayer/CreditsMenuScreen/VBoxContainer"]
 custom_minimum_size = Vector2(300, 60)
 layout_mode = 2
-theme_override_colors/font_hover_pressed_color = Color(1, 0.905882, 0.839216, 1)
-theme_override_colors/font_hover_color = Color(1, 0.905882, 0.839216, 1)
-theme_override_colors/font_outline_color = Color(0.45098, 0.27451, 0.298039, 1)
 theme_override_colors/font_color = Color(1, 0.905882, 0.839216, 1)
 theme_override_colors/font_pressed_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_outline_color = Color(0.45098, 0.27451, 0.298039, 1)
 theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("2_omy8q")
 theme_override_font_sizes/font_size = 36
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i5wg5")
-theme_override_styles/hover = SubResource("StyleBoxFlat_3c04x")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_joh67")
 theme_override_styles/normal = SubResource("StyleBoxFlat_3c04x")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_joh67")
+theme_override_styles/hover = SubResource("StyleBoxFlat_3c04x")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i5wg5")
 text = "Return to Main Menu"
 metadata/_edit_use_anchors_ = true
 
@@ -400,18 +400,18 @@ value = -15.0
 [node name="OptionsReturnToMain" type="Button" parent="CanvasLayer/OptionsMenuScreen/VBoxContainer"]
 custom_minimum_size = Vector2(300, 60)
 layout_mode = 2
-theme_override_colors/font_hover_pressed_color = Color(1, 0.905882, 0.839216, 1)
-theme_override_colors/font_hover_color = Color(1, 0.905882, 0.839216, 1)
-theme_override_colors/font_outline_color = Color(0.45098, 0.27451, 0.298039, 1)
 theme_override_colors/font_color = Color(1, 0.905882, 0.839216, 1)
 theme_override_colors/font_pressed_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_colors/font_outline_color = Color(0.45098, 0.27451, 0.298039, 1)
 theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("2_omy8q")
 theme_override_font_sizes/font_size = 36
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i5wg5")
-theme_override_styles/hover = SubResource("StyleBoxFlat_3c04x")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_joh67")
 theme_override_styles/normal = SubResource("StyleBoxFlat_3c04x")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_joh67")
+theme_override_styles/hover = SubResource("StyleBoxFlat_3c04x")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_i5wg5")
 text = "Return to Main Menu"
 metadata/_edit_use_anchors_ = true
 

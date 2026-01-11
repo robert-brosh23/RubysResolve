@@ -9,6 +9,7 @@ const CARD_MOVEMENT_DURATION := 1.0
 
 var promise_queue: PromiseQueue
 var too_many_label_timer: SceneTreeTimer
+var sound_draw_card := preload("res://audio/sfx/draw_card.wav")
 
 func _ready() -> void:
 	shuffling_label.visible = false
@@ -31,17 +32,23 @@ func add_cards(cards: Array[Card]):
 	
 func draw_card() -> Card:
 	if CardsCollection.cards_in_deck.is_empty():
-		await CardsController.move_cards_from_discard_pile_to_deck_and_shuffle()
-		if CardsCollection.cards_in_deck.is_empty():
+		if CardsCollection.cards_in_discard_pile.is_empty():
 			print("Deck is empty. Cannot draw card")
 			return null
+		await CardsController.move_cards_from_discard_pile_to_deck_and_shuffle()
 	var card = CardsCollection.cards_in_deck[0]
 	CardsCollection.cards_in_deck.remove_at(0)
+	AudioPlayer.play_sound(sound_draw_card)
 	_update_card_number_text()
 	_update_top_card_z_index()
 	
 	card.draw_card_effect()
 	return card
+	
+func peek_top_card() -> Card:
+	if CardsCollection.cards_in_deck.is_empty():
+		return null
+	return CardsCollection.cards_in_deck[0]
 	
 func shuffle_deck() -> void:
 	for i in range(CardsCollection.cards_in_deck.size() - 1, 0, -1):

@@ -14,6 +14,8 @@ const OBSTACLE_STYLEBOX_PATH = "res://card/card_data/styles/stylebox/obstacle_st
 const OBSTACLE_STYLEBOX_IMAGE_FRAME_PATH = "res://card/card_data/styles/stylebox/image_frame_obstacle_stylebox.tres"
 const FACE_DOWN_CARD_STYLEBOX_PATH = "res://card/card_data/styles/stylebox/face_down_card_stylebox.tres"
 
+const FRIENDSHIP_INCREASE := .03
+
 @export var card_data: CardData
 @export var movement_tween_manager: MovementTweenManager
 var game_manager: GameManager
@@ -27,6 +29,7 @@ var game_manager: GameManager
 @onready var animation_player = $AnimationPlayer
 @onready var cost_panel_margin_container = $Panel/MarginContainer/VBoxContainer/HBoxContainer/CostPanelMarginContainer
 @onready var cost_label = $Panel/MarginContainer/VBoxContainer/HBoxContainer/CostPanelMarginContainer/CostPanel/CostLabel
+@onready var dusk_animation_border = $Panel/DuskAnimationBorder
 
 var flipped_up: bool = true
 var selected_font = FontFile
@@ -38,13 +41,24 @@ var main_ui: MainUi
 var hours_tracker: HoursTracker
 var cursor: Cursor
 
-var cost := 0
+var cost := 0:
+	set(value):
+		cost = value
+		cost_label.text = str(value)
+		
 var perm_cost: int
 
-var delete_sound := preload("res://audio/sfx/110931__chrisw92__error2.wav")
-		
+var description: String:
+	set(value):
+		description = value
+		description_label.text = value
 
-enum states {READY, NOT_IN_HAND, HOVERING, DRAGGING, PLAYING, RETURNING, PREVIEW_PICKING, DELETING}
+var friendship_amount: float = .15
+
+var delete_sound := preload("res://audio/sfx/110931__chrisw92__error2.wav")
+
+
+enum states {READY, NOT_IN_HAND, HOVERING, DUSK, DRAGGING, PLAYING, RETURNING, PREVIEW_PICKING, DELETING}
 
 ## Creates a new card, given the card_data
 static func create_card(card_data: CardData) -> Card:
@@ -64,7 +78,7 @@ func _ready() -> void:
 	animation_player.speed_scale = 1.0 / Globals.animation_speed_scale
 	calibrate_cost()
 	apply_card_visual_faceup()
-	_set_card_data()
+	_pull_starting_card_data()
 	
 	SignalBus.alter_cost.connect(
 		func():
@@ -73,7 +87,10 @@ func _ready() -> void:
 
 func calibrate_cost() -> void:
 	cost = perm_cost * SignalBus.cost_multiplier
-	_set_card_data()
+	if SignalBus.cost_multiplier > 1.0:
+		cost_label.add_theme_color_override("font_color", Constants.COLOR_HOT_PINK)
+	else:
+		cost_label.add_theme_color_override("font_color", Constants.COLOR_PURPLE)
 
 ## Check to see if the card can be played, and play it.
 ## target: the project targeted with this card. Will be null if the card doesn't need a target
@@ -85,7 +102,7 @@ func play_card(target: Project) -> bool:
 		return false
 	
 	game_manager.hours -= cost
-	play_card_effect(target)
+	await play_card_effect(target)
 	print (card_data.card_name, " was played.")
 	hours_tracker._check_cards_playable(self, target)
 	return true
@@ -104,23 +121,45 @@ func play_card_effect(target: Project) -> void:
 	if effect == CardData.NO_EFFECT:
 		return
 	
-	promise_queue.paused = true
+	promise_queue.paused += 1
 	if target == null:
 		await call(card_data.effect_map[card_data.card_effect])
 	else:
 		await call(card_data.effect_map[card_data.card_effect], target)
 		
 	SignalBus.card_played.emit(self, target)
-	promise_queue.paused = false
+	promise_queue.paused -= 1
 	
 func draw_card_effect() -> void:
 	var effect := card_data.draw_effect_map[card_data.card_effect]
 	if effect == CardData.NO_EFFECT:
 		return
 	
-	promise_queue.paused = true
+	promise_queue.paused += 1
 	await call(card_data.draw_effect_map[card_data.card_effect])
-	promise_queue.paused = false
+	promise_queue.paused -= 1
+	
+func dusk_card_effect() -> void:
+	var effect := card_data.dusk_effect_map[card_data.card_effect]
+	if effect == CardData.NO_EFFECT:
+		return
+	
+	promise_queue.paused += 1
+	state = states.DUSK
+	z_index = 100
+	var pos_tween = create_tween()
+	pos_tween.tween_property(panel, "position:y", -120, .25 * Globals.animation_speed_scale)
+	
+	animation_player.play("activate_dusk_effect")
+	await call(card_data.dusk_effect_map[card_data.card_effect])
+	await get_tree().create_timer(1).timeout
+	animation_player.stop()
+	dusk_animation_border.visible = false
+	state = states.NOT_IN_HAND
+	
+	var pos_tween2 = create_tween()
+	pos_tween2.tween_property(panel, "position:y", -64, .5 * Globals.animation_speed_scale)
+	promise_queue.paused -= 1
 	
 func hover_card() -> void:
 	state = states.HOVERING
@@ -163,28 +202,23 @@ func apply_card_visual_faceup() -> void:
 		CardData.CARD_TYPE.OBSTACLE:
 			_apply_card_type_visual_obstacle()
 			
+	if card_data.get_target_type() == CardData.target_type.UNPLAYABLE:
+		cost_panel_margin_container.visible = false
+	else:
+		cost_panel_margin_container.visible = true	
+		
 	var font := card_data.get_font()
 	title_label.add_theme_font_override("font", font)
 	
 	margin_container.visible = true
 
-func _set_card_data() -> void:
+func _pull_starting_card_data() -> void:
 	if card_data == null:
 		return
 	
 	title_label.text = card_data.card_name
 	texture_label.texture = card_data.card_png
-	description_label.text = card_data.card_description
-	cost_label.text = str(cost)
-	if SignalBus.cost_multiplier > 1.0:
-		cost_label.add_theme_color_override("font_color", Constants.COLOR_HOT_PINK)
-	else:
-		cost_label.add_theme_color_override("font_color", Constants.COLOR_PURPLE)
-	
-	if card_data.get_target_type() == CardData.target_type.UNPLAYABLE:
-		cost_panel_margin_container.visible = false
-	else:
-		cost_panel_margin_container.visible = true	
+	description = card_data.card_description
 	
 	description_label.add_theme_constant_override("line_spacing", card_data.desc_line_spacing)
 	
@@ -271,8 +305,17 @@ func _apply_spacer_container_margin() -> void:
 	
 # CARD EFFECT FUNCTIONS
 func _execute_new_day():
-	cursor.play_message("Stress set to 3")
-	game_manager.stress = 3
+	cursor.play_message("Let's start off the day right.")
+	for i in range(0,2):
+		var card := await CardsController.peek_at_top_card_of_deck()
+		if card == null:
+			continue
+		if card.card_data.card_type == card_data.CARD_TYPE.OBSTACLE:
+			await CardsController._discard_card_from_deck()
+		else:
+			await CardsController.draw_card_from_deck()
+		await get_tree().create_timer(.2).timeout
+	
 	
 func _execute_meditation():
 	cursor.play_message("Hmmmmmmmm")
@@ -284,13 +327,14 @@ func _execute_organize():
 	cursor.play_message("Put this here, and that there...")
 	SignalBus.new_day_started.connect(
 		func(day: int): 
-			game_manager.hours += 2
-			cursor.play_message("+2 hours (Organized)")
+			game_manager.hours += 3
+			cursor.play_message("+3 hours (Organized)")
 			, CONNECT_ONE_SHOT
 	)
 	
 func _execute_brain_blast():
 	cursor.play_message("Got an idea.")
+
 	for i in range(0,3):
 		await CardsController.draw_card_from_deck()
 		await get_tree().create_timer(.2).timeout
@@ -310,17 +354,19 @@ func _execute_small_step(target: Project):
 	target.add_step_and_progress()
 	
 func _execute_touch_grass():
-	cursor.play_message("-1 Stress")
-	GameManager.stress -= 1
+	var amount: int = GameManager.stress * 0.2
+	
+	cursor.play_message("-" + str(amount) + " Stress")
+	GameManager.stress -= amount
 	
 func _execute_friendship():
-	GameManager.stress -= 1
-	if perm_cost != 0:
+	var amount: int = GameManager.stress * friendship_amount
+	GameManager.stress -= amount
+	if friendship_amount != 1.0:
 		cursor.play_message("Friendship improved :)")
-		cursor.play_message("-1 Stress")
-		perm_cost -= 1
-		calibrate_cost()
-		_set_card_data()
+		cursor.play_message("-" + str(amount) + " Stress")
+		friendship_amount += FRIENDSHIP_INCREASE
+		description = "Reduce stress by " + str(int(friendship_amount * 100)) + "%, then permanently increase this amount by 3%."
 		
 func _execute_grind(target: Project):
 	target.progress(2)
@@ -358,19 +404,24 @@ func _delete_self():
 	delete_card()
 	
 func _execute_mental_health_day():
-	cursor.play_message("Phew")
-	cursor.play_message("-3 Stress")
-	game_manager.stress -= 3
+	cursor.play_message("Nice to take a day off.")
 	for i in range(CardsCollection.cards_in_hand.size() - 1, -1, -1):
 		if CardsCollection.cards_in_hand[i].card_data.card_type == CardData.CARD_TYPE.OBSTACLE:
 			CardsCollection.cards_in_hand[i].delete_card()
 			
+	_delete_self()
+			
 func _execute_therapy():
-	var conditions: Array[Callable] = [func(card: Card): return card.card_data.card_type == CardData.CARD_TYPE.OBSTACLE]
-	var result := await CardsController.select_cards(1, conditions, self)
-	for card in result:
-		cursor.play_message("Phew")
-		card.delete_card()
+	var obstacles : Array[Card] = []
+	for card in CardsCollection.cards_in_hand:
+		if card.card_data.card_type == CardData.CARD_TYPE.OBSTACLE:
+			obstacles.append(card)
+	if obstacles.is_empty():
+		return
+		
+	var card = obstacles.pick_random()
+	cursor.play_message("Phew")
+	card.delete_card()
 	var hand: Hand = get_tree().get_first_node_in_group("hand")
 	hand._update_hand()
 	
@@ -407,8 +458,8 @@ func _execute_new_hobby():
 	
 # DRAW EFFECTS
 func _draw_effect_comparison():
-	cursor.play_message("+2 Stress (Comparison)")
-	game_manager.stress += 2
+	cursor.play_message("+20 Stress (Comparison)")
+	game_manager.stress += 20
 	projects_manager.projects[randi() % projects_manager.projects.size()].progress(3)
 	
 func _draw_effect_addiction():
@@ -421,26 +472,6 @@ func _draw_effect_forgot_my_lunch():
 	SignalBus.alter_cost.emit()
 	SignalBus.start_card_played.connect(_forgot_my_lunch_reset_card_played, CONNECT_ONE_SHOT)
 	SignalBus.new_day_started.connect(_forgot_my_lunch_reset_new_day, CONNECT_ONE_SHOT)
-	
-func _forgot_my_lunch_reset_card_played(card: Card, target: Project):
-	var args = await SignalBus.card_played
-	_forgot_my_lunch_reset()
-	
-func _forgot_my_lunch_reset_new_day(day: int):
-	_forgot_my_lunch_reset()
-	
-func _forgot_my_lunch_reset():
-	SignalBus.cost_multiplier *= 0.5
-	SignalBus.alter_cost.emit()
-	for connection in SignalBus.start_card_played.get_connections():
-		var callable : Callable = connection["callable"]
-		if callable.get_method() == "_forgot_my_lunch_reset_card_played":
-			SignalBus.start_card_played.disconnect(_forgot_my_lunch_reset_card_played)
-	for connection in SignalBus.new_day_started.get_connections():
-		var callable : Callable = connection["callable"]
-		if callable.get_method() == "_forgot_my_lunch_reset_new_day":
-			SignalBus.new_day_started.disconnect(_forgot_my_lunch_reset_new_day)
-	hours_tracker._check_cards_playable(null, null)
 	
 func _execute_strong_start(target: Project):
 	if target.current_progress == 0:
@@ -501,14 +532,64 @@ func _execute_routine():
 	cursor.play_message("Permanent cost decreased!")
 	result[0].perm_cost -= 1
 	result[0].calibrate_cost()
+	_delete_self()
 	
 func _execute_sleep_deprived():
 	cursor.play_message("So sleepy...")
 	_delete_self()
 	
 func _draw_effect_anxiety():
-	cursor.play_message("+1 Stress (Anxiety)")
-	game_manager.stress += 1
+	cursor.play_message("+10 Stress (Anxiety)")
+	game_manager.stress += 10
+	
+func _dusk_effect_forgot_my_lunch():
+	cursor.play_message("Forgot my lunch :(")
+	SignalBus.cost_multiplier *= 2.0
+	SignalBus.new_day_started.connect(
+		func(day: int):
+			SignalBus.new_day_started.connect(_forgot_my_lunch_reset_new_day)
+			SignalBus.start_card_played.connect(_forgot_my_lunch_reset_card_played)
+			SignalBus.alter_cost.emit(), CONNECT_ONE_SHOT
+	)
+	
+func _forgot_my_lunch_reset_card_played(card: Card, target: Project):
+	var args = await SignalBus.card_played
+	_forgot_my_lunch_reset()
+	
+func _forgot_my_lunch_reset_new_day(day: int):
+	_forgot_my_lunch_reset()
+	
+func _forgot_my_lunch_reset():
+	SignalBus.cost_multiplier *= 0.5
+	SignalBus.alter_cost.emit()
+	for connection in SignalBus.start_card_played.get_connections():
+		var callable : Callable = connection["callable"]
+		if callable.get_method() == "_forgot_my_lunch_reset_card_played":
+			SignalBus.start_card_played.disconnect(callable)
+			break
+	for connection in SignalBus.new_day_started.get_connections():
+		var callable : Callable = connection["callable"]
+		if callable.get_method() == "_forgot_my_lunch_reset_new_day":
+			SignalBus.new_day_started.disconnect(callable)
+			break
+	hours_tracker._check_cards_playable(null, null)
+	
+func _dusk_effect_anxiety():
+	cursor.play_message("+10 Stress (Anxiety)")
+	game_manager.stress += 15
+	
+func _dusk_effect_comparison():
+	cursor.play_message("+20 Stress (Comparison)")
+	game_manager.stress += 25
+	await projects_manager.projects[randi() % projects_manager.projects.size()].progress(3)
+	
+func _dusk_effect_addiction():
+	cursor.play_message("-3 Hours (Addiction)")
+	SignalBus.new_day_started.connect(
+		func(day: int):
+			game_manager.hours -= 3,
+			CONNECT_ONE_SHOT
+	)
 	
 func _on_panel_mouse_entered() -> void:
 	if state == states.READY || state == states.DRAGGING || state == states.PREVIEW_PICKING || state == states.RETURNING:

@@ -133,6 +133,8 @@ func _handle_input() -> void:
 					_show_target_area(c)
 			
 	if state == states.DRAGGING:
+		if dragged_card == null:
+			return
 		dragged_card.global_position = get_viewport().get_mouse_position() + drag_offset
 		var mouse_pos = get_viewport().get_mouse_position()
 		if dragged_card.card_data.get_target_type() == CardData.target_type.SINGLE:
@@ -234,7 +236,8 @@ func return_card(returning_card: Card) -> void:
 	
 	var tween = create_tween()
 	tween.tween_callback(func():
-		returning_card.state = Card.states.READY
+		if returning_card.state != Card.states.DRAGGING:
+			returning_card.state = Card.states.READY
 	).set_delay(1.0 * Globals.animation_speed_scale)
 	
 
@@ -250,7 +253,7 @@ func _update_hand():
 		if !selected_cards.has(card):
 			var y_pos = card.position.y if card == hovered_card else DEFAULT_Y
 			card.movement_tween_manager.tween_to_pos(card, Vector2(x_pos, y_pos))
-		if card.state != card.states.HOVERING:
+		if card.state != card.states.HOVERING and card.state != card.states.DUSK:
 			card.z_index = z_index
 			
 			# There is a bug with panel's mouse signals. When two nodes have the same parent, the node that is lower will take priority for these signals regardless of z index.

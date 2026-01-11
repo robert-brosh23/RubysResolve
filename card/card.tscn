@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bu8nv7leim8od"]
+[gd_scene load_steps=18 format=3 uid="uid://bu8nv7leim8od"]
 
 [ext_resource type="Script" uid="uid://b4h4dbu2ryb06" path="res://card/card.gd" id="1_ply2h"]
 [ext_resource type="Texture2D" uid="uid://djnq5q44dua12" path="res://sprites/meditation.png" id="2_1n6wr"]
@@ -8,6 +8,7 @@
 [ext_resource type="FontFile" uid="uid://cm4gkenj5odhg" path="res://fonts/m5x7.ttf" id="4_1n6wr"]
 [ext_resource type="StyleBox" uid="uid://dimhb80rr3nit" path="res://card/card_data/styles/stylebox/image_frame_art_stylebox.tres" id="6_6xkbt"]
 [ext_resource type="PackedScene" uid="uid://bslur2hh54tgf" path="res://utility/movement_tween_manager/movement_tween_manager.tscn" id="7_1n6wr"]
+[ext_resource type="Texture2D" uid="uid://5omfgrk46tmh" path="res://sprites/dusk_border_anim.png" id="9_ags6k"]
 
 [sub_resource type="Resource" id="Resource_7dy67"]
 script = ExtResource("3_ags6k")
@@ -53,6 +54,30 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = false
+tracks/2/path = NodePath("Panel/DuskAnimationBorder:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Panel/DuskAnimationBorder:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
 }
 
 [sub_resource type="Animation" id="Animation_7dy67"]
@@ -128,9 +153,39 @@ tracks/1/keys = {
 }]
 }
 
+[sub_resource type="Animation" id="Animation_houxr"]
+resource_name = "activate_dusk_effect"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Panel/DuskAnimationBorder:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Panel/DuskAnimationBorder:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 0, 1]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7dy67"]
 _data = {
 &"RESET": SubResource("Animation_ags6k"),
+&"activate_dusk_effect": SubResource("Animation_houxr"),
 &"delete": SubResource("Animation_7dy67"),
 &"flip_card_down": SubResource("Animation_6xkbt"),
 &"flip_card_up": SubResource("Animation_1n6wr")
@@ -249,6 +304,12 @@ text = "This is a description. Lots of things to describe here."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
+
+[node name="DuskAnimationBorder" type="Sprite2D" parent="Panel"]
+visible = false
+position = Vector2(44, 64)
+texture = ExtResource("9_ags6k")
+hframes = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
