@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PlayerStatusData" load_steps=3 format=3 uid="uid://br0pqiwtlh02i"]
+
+[ext_resource type="Script" uid="uid://cygoi7356seyp" path="res://status/player_status/data/player_status_data.gd" id="1_b4bhn"]
+[ext_resource type="Texture2D" uid="uid://bhq5exyck00kd" path="res://sprites/addiction_status.png" id="2_dnsq6"]
+
+[resource]
+script = ExtResource("1_b4bhn")
+name = "Addicted"
+effect = 1
+texture_png = ExtResource("2_dnsq6")
+tooltip = "You have 3 less hours today."
+metadata/_custom_type_script = "uid://cygoi7356seyp"

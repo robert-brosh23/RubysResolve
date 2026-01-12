@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://buxjmutojq6ho" path="res://ui/card_rewards_menu/card_rewards_menu.gd" id="1_kqkvr"]
 [ext_resource type="FontFile" uid="uid://b0rxba54kbo4h" path="res://fonts/m6x11plus.ttf" id="2_3kutq"]
 [ext_resource type="Resource" uid="uid://dubw1i8dw6h3h" path="res://card/card_data/cards/logic/brain_blast.tres" id="3_73hql"]
-[ext_resource type="Resource" uid="uid://brgue6g2tmhlw" path="res://card/card_data/cards/logic/clean.tres" id="4_46qc8"]
+[ext_resource type="Resource" uid="uid://byfvp4vfogvpo" path="res://card/card_data/cards/logic/Clean.tres" id="4_46qc8"]
 [ext_resource type="Resource" uid="uid://bhotvevbx3ur4" path="res://card/card_data/cards/logic/community_support.tres" id="5_y1dfi"]
 [ext_resource type="Resource" uid="uid://c3mewqp8x81hx" path="res://card/card_data/cards/logic/extra_credit.tres" id="6_jnmr4"]
 [ext_resource type="Resource" uid="uid://mx5qkjxwk2ye" path="res://card/card_data/cards/logic/meditation.tres" id="6_tt0un"]
@@ -25,9 +25,9 @@
 [ext_resource type="Resource" uid="uid://cqltrrpvk156x" path="res://card/card_data/cards/creativity/syncing_up.tres" id="18_bg1gq"]
 [ext_resource type="Resource" uid="uid://dk603xhti03hm" path="res://card/card_data/cards/obstacle/addiction.tres" id="18_jnmr4"]
 [ext_resource type="Resource" uid="uid://ba5stqt0xy1qd" path="res://card/card_data/cards/obstacle/comparison.tres" id="19_btv7j"]
-[ext_resource type="Resource" uid="uid://cuyftbvj6fopp" path="res://card/card_data/cards/obstacle/sleep_deprived.tres" id="20_1dew5"]
 [ext_resource type="Resource" uid="uid://hbsxvkq72uke" path="res://card/card_data/cards/obstacle/forgot_my_lunch.tres" id="20_xyrri"]
 [ext_resource type="Resource" uid="uid://coh1whm120l72" path="res://card/card_data/cards/wisdom/overcome_adversity.tres" id="24_btv7j"]
+[ext_resource type="Resource" uid="uid://dt73u1mt8nnfn" path="res://card/card_data/cards/obstacle/anxiety.tres" id="26_hf245"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kqkvr"]
 bg_color = Color(0.670588, 0.337255, 0.458824, 1)
@@ -127,7 +127,7 @@ text = "Skip"
 process_thread_group = 2
 process_thread_group_order = 0
 process_thread_messages = 0
-resources = [PackedStringArray("brain_blast", "clean", "community_support", "extra_credit", "meditation", "new_hobby", "organize", "routine"), [ExtResource("3_73hql"), ExtResource("4_46qc8"), ExtResource("5_y1dfi"), ExtResource("6_jnmr4"), ExtResource("6_tt0un"), ExtResource("7_k26dm"), ExtResource("8_r5rr3"), ExtResource("10_1dew5")]]
+resources = [PackedStringArray("Clean", "brain_blast", "community_support", "extra_credit", "meditation", "new_hobby", "organize", "routine"), [ExtResource("4_46qc8"), ExtResource("3_73hql"), ExtResource("5_y1dfi"), ExtResource("6_jnmr4"), ExtResource("6_tt0un"), ExtResource("7_k26dm"), ExtResource("8_r5rr3"), ExtResource("10_1dew5")]]
 
 [node name="CreativityCardsResourcePreloader" type="ResourcePreloader" parent="."]
 process_thread_group = 2
@@ -145,7 +145,7 @@ resources = [PackedStringArray("friendship", "mental_health_day", "new_day", "ov
 process_thread_group = 2
 process_thread_group_order = 0
 process_thread_messages = 0
-resources = [PackedStringArray("addiction", "comparison", "forgot_my_lunch", "sleep_deprived"), [ExtResource("18_jnmr4"), ExtResource("19_btv7j"), ExtResource("20_xyrri"), ExtResource("20_1dew5")]]
+resources = [PackedStringArray("addiction", "anxiety", "comparison", "forgot_my_lunch"), [ExtResource("18_jnmr4"), ExtResource("26_hf245"), ExtResource("19_btv7j"), ExtResource("20_xyrri")]]
 
 [connection signal="mouse_entered" from="MarginContainer/VBoxContainer/SkipButton" to="." method="_on_skip_button_mouse_entered"]
 [connection signal="mouse_exited" from="MarginContainer/VBoxContainer/SkipButton" to="." method="_on_skip_button_mouse_exited"]

@@ -63,9 +63,5 @@ func deadline_met(score: int):
 	curr_deadline_index += 1
 	set_score_label(score)
 	
-func check_game_over(score: int):
-	if deadlines[curr_deadline_index].day < GameManager.day:
-		print("Game Over")
-	
 func _ready():
 	initialize_deadlines()

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=3 format=3 uid="uid://ehhar22l8kca"]
+
+[ext_resource type="Texture2D" uid="uid://cov2q76py7u4" path="res://sprites/girlywithbuns.png" id="1_m31iy"]
+[ext_resource type="Script" uid="uid://bevi4n8n1jvud" path="res://card/card_data/card_data.gd" id="1_pnmgc"]
+
+[resource]
+script = ExtResource("1_pnmgc")
+card_name = "Cute Dog"
+card_cost = 2
+card_png = ExtResource("1_m31iy")
+card_description = "Discard the next obstacle drawn."
+card_type = 2
+card_effect = 31
+metadata/_custom_type_script = "uid://bevi4n8n1jvud"

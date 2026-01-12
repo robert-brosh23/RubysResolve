@@ -1,0 +1,72 @@
+[gd_scene load_steps=6 format=3 uid="uid://cg2h8j5px84ig"]
+
+[ext_resource type="Script" uid="uid://b1ucmteg72ltr" path="res://status/player_status/player_status.gd" id="1_8p6mx"]
+[ext_resource type="Texture2D" uid="uid://pmtg37akcjyv" path="res://sprites/spawn-point.png" id="2_v2bor"]
+[ext_resource type="FontFile" uid="uid://c6lfcmqrq1huc" path="res://fonts/m3x6.ttf" id="3_fuc8m"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0ouwx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ox7sf"]
+bg_color = Color(0.45098, 0.27451, 0.298039, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[node name="PlayerStatus" type="Control" node_paths=PackedStringArray("texture", "tooltip_container", "tooltip_label", "counter_label")]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_8p6mx")
+texture = NodePath("Texture")
+tooltip_container = NodePath("Tooltip")
+tooltip_label = NodePath("Tooltip/MarginContainer/TooltipText")
+counter_label = NodePath("CounterLabel")
+
+[node name="Texture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 12.0
+offset_bottom = 12.0
+texture = ExtResource("2_v2bor")
+
+[node name="HoverPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 20.0
+offset_bottom = 20.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_0ouwx")
+
+[node name="Tooltip" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 22.0
+offset_right = 29.0
+offset_bottom = 42.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ox7sf")
+
+[node name="MarginContainer" type="MarginContainer" parent="Tooltip"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="TooltipText" type="Label" parent="Tooltip/MarginContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.905882, 0.839216, 1)
+theme_override_fonts/font = ExtResource("3_fuc8m")
+theme_override_font_sizes/font_size = 16
+text = "tooltip_text"
+
+[node name="CounterLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 10.0
+offset_right = 30.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.670588, 0.337255, 0.458824, 1)
+theme_override_fonts/font = ExtResource("3_fuc8m")
+theme_override_font_sizes/font_size = 16
+text = "1"
+
+[connection signal="mouse_entered" from="HoverPanel" to="." method="_on_panel_mouse_entered"]
+[connection signal="mouse_exited" from="HoverPanel" to="." method="_on_panel_mouse_exited"]

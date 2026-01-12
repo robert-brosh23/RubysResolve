@@ -29,8 +29,8 @@ var effect_map: Dictionary[resolve_effect, Callable] = {
 	resolve_effect.REFRAMED_THINKING: _create_reframed_thinking
 }
 
-func get_effect_callable(effect: resolve_effect) -> Callable:
-	return effect_map[effect]
+func get_effect_callable(_effect: resolve_effect) -> Callable:
+	return effect_map[_effect]
 
 func _create_spawn_point():
 	SignalBus.new_day_started.connect(

@@ -49,7 +49,6 @@ func _process(delta: float) -> void:
 	if !Input.is_action_just_pressed("click"):
 		return
 	var mouse_pos = get_viewport().get_mouse_position()
-	print(mouse_pos)
 	if !curr_choices.is_empty():
 		for card in curr_choices:
 			if mouse_pos.y > card.panel.global_position.y && \

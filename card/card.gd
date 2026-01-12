@@ -40,6 +40,7 @@ var card_rewards_menu: CardRewardsMenu
 var main_ui: MainUi
 var hours_tracker: HoursTracker
 var cursor: Cursor
+var player_status_manager: PlayerStatusManager
 
 var cost := 0:
 	set(value):
@@ -75,7 +76,9 @@ func _ready() -> void:
 	main_ui = get_tree().get_first_node_in_group("main_ui")
 	hours_tracker = get_tree().get_first_node_in_group("hours_tracker")
 	cursor = get_tree().get_first_node_in_group("cursor")
+	player_status_manager = get_tree().get_first_node_in_group("player_status_manager")
 	animation_player.speed_scale = 1.0 / Globals.animation_speed_scale
+	promise_queue = GameManager.promise_queue
 	calibrate_cost()
 	apply_card_visual_faceup()
 	_pull_starting_card_data()
@@ -111,7 +114,14 @@ func delete_card() -> void:
 	state = states.DELETING
 	AudioPlayer.play_sound(delete_sound)
 	animation_player.play("delete")
-	CardsCollection.cards_in_hand.erase(self)
+	if CardsCollection.cards_in_hand.has(self):
+		CardsCollection.cards_in_hand.erase(self)
+	elif CardsCollection.cards_in_deck.has(self):
+		CardsCollection.cards_in_deck.erase(self)
+	elif CardsCollection.cards_in_discard_pile.has(self):
+		CardsCollection.cards_in_discard_pile.erase(self)
+	else:
+		print("ERROR: card not found in deck, hand, or discard pile. Cannot delete.")
 	CardsCollection.deleted_cards.append(self)
 	
 ## Execute the card's specific played effect.
@@ -347,8 +357,10 @@ func _execute_clean():
 	
 	for card in result:
 		card.delete_card()
-	var hand: Hand = get_tree().get_first_node_in_group("hand")
-	hand._update_hand()
+		
+	for i in range(0,result.size()):
+		await CardsController.draw_card_from_deck()
+		await get_tree().create_timer(.2).timeout
 	
 func _execute_small_step(target: Project):
 	target.add_step_and_progress()
@@ -380,8 +392,6 @@ func _execute_community_support():
 	
 	SignalBus.new_day_started.connect(
 		func(day: int): 
-			for connection in SignalBus.start_card_played.get_connections():
-				print(connection)
 			if SignalBus.start_card_played.is_connected(_trigger_community_support):
 				SignalBus.start_card_played.disconnect(_trigger_community_support)
 		
@@ -453,6 +463,7 @@ func _execute_new_hobby():
 			await card.play_card_effect(project_target)
 	else:
 		await card.play_card_effect(null)
+		
 	var hand: Hand = get_tree().get_first_node_in_group("hand")
 	hand._update_hand()
 	
@@ -466,12 +477,12 @@ func _draw_effect_addiction():
 	cursor.play_message("-3 Hours (Addiction)")
 	game_manager.hours -= 3
 	
-func _draw_effect_forgot_my_lunch():
-	cursor.play_message("Forgot my lunch :(")
-	SignalBus.cost_multiplier *= 2.0
-	SignalBus.alter_cost.emit()
-	SignalBus.start_card_played.connect(_forgot_my_lunch_reset_card_played, CONNECT_ONE_SHOT)
-	SignalBus.new_day_started.connect(_forgot_my_lunch_reset_new_day, CONNECT_ONE_SHOT)
+#func _draw_effect_forgot_my_lunch():
+	#cursor.play_message("Forgot my lunch :(")
+	#SignalBus.cost_multiplier *= 2.0
+	#SignalBus.alter_cost.emit()
+	#SignalBus.start_card_played.connect(_forgot_my_lunch_reset_card_played, CONNECT_ONE_SHOT)
+	#SignalBus.new_day_started.connect(_forgot_my_lunch_reset_new_day, CONNECT_ONE_SHOT)
 	
 func _execute_strong_start(target: Project):
 	if target.current_progress == 0:
@@ -538,41 +549,21 @@ func _execute_sleep_deprived():
 	cursor.play_message("So sleepy...")
 	_delete_self()
 	
+func _execute_walk_the_dog():
+	cursor.play_message("Let's go, Butters.")
+	for status in player_status_manager.statuses:
+		if status.status_data.effect == PlayerStatusData.player_status_effect.CUTE_DOG:
+			status.status_data.counter += 1
+			return
+	player_status_manager.add_status(load("res://status/player_status/data/statuses/cute_dog.tres") as PlayerStatusData)
+	
 func _draw_effect_anxiety():
 	cursor.play_message("+10 Stress (Anxiety)")
 	game_manager.stress += 10
 	
 func _dusk_effect_forgot_my_lunch():
 	cursor.play_message("Forgot my lunch :(")
-	SignalBus.cost_multiplier *= 2.0
-	SignalBus.new_day_started.connect(
-		func(day: int):
-			SignalBus.new_day_started.connect(_forgot_my_lunch_reset_new_day)
-			SignalBus.start_card_played.connect(_forgot_my_lunch_reset_card_played)
-			SignalBus.alter_cost.emit(), CONNECT_ONE_SHOT
-	)
-	
-func _forgot_my_lunch_reset_card_played(card: Card, target: Project):
-	var args = await SignalBus.card_played
-	_forgot_my_lunch_reset()
-	
-func _forgot_my_lunch_reset_new_day(day: int):
-	_forgot_my_lunch_reset()
-	
-func _forgot_my_lunch_reset():
-	SignalBus.cost_multiplier *= 0.5
-	SignalBus.alter_cost.emit()
-	for connection in SignalBus.start_card_played.get_connections():
-		var callable : Callable = connection["callable"]
-		if callable.get_method() == "_forgot_my_lunch_reset_card_played":
-			SignalBus.start_card_played.disconnect(callable)
-			break
-	for connection in SignalBus.new_day_started.get_connections():
-		var callable : Callable = connection["callable"]
-		if callable.get_method() == "_forgot_my_lunch_reset_new_day":
-			SignalBus.new_day_started.disconnect(callable)
-			break
-	hours_tracker._check_cards_playable(null, null)
+	player_status_manager.add_status(load("res://status/player_status/data/statuses/forgot_lunch.tres") as PlayerStatusData)
 	
 func _dusk_effect_anxiety():
 	cursor.play_message("+10 Stress (Anxiety)")
@@ -585,11 +576,7 @@ func _dusk_effect_comparison():
 	
 func _dusk_effect_addiction():
 	cursor.play_message("-3 Hours (Addiction)")
-	SignalBus.new_day_started.connect(
-		func(day: int):
-			game_manager.hours -= 3,
-			CONNECT_ONE_SHOT
-	)
+	player_status_manager.add_status(load("res://status/player_status/data/statuses/addiction.tres") as PlayerStatusData)
 	
 func _on_panel_mouse_entered() -> void:
 	if state == states.READY || state == states.DRAGGING || state == states.PREVIEW_PICKING || state == states.RETURNING:

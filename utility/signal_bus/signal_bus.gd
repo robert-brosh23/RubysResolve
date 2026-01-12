@@ -1,14 +1,16 @@
 extends Node
 
 signal new_day_started(num_day: int)
+signal dusk_started
 
-signal alter_cost(multiplier: float)
+signal alter_cost
 var cost_multiplier := 1.0
 
 var pending := []
 signal start_card_played(card: Card, target: Project)
 signal card_played(card: Card, target: Project)
 signal card_played_chained(card: Card, target: Project)
+signal card_drawn(card: Card)
 
 signal reward_choice_made(choice: Variant)
 
@@ -30,7 +32,7 @@ func _ready() -> void:
 func reset():
 	pending.clear()
 	cost_multiplier = 1.0
-	for signal_name in ["card_played", "start_card_played", "card_played_chained", "alter_cost", "new_day_started"]:
+	for signal_name in ["card_played", "start_card_played", "card_played_chained", "alter_cost", "new_day_started", "dusk_started"]:
 		for conn in get_signal_connection_list(signal_name):
 			disconnect(signal_name, conn.callable)
 			

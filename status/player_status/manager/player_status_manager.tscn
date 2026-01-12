@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://bv50hyrfkcltb"]
+
+[ext_resource type="Script" uid="uid://xuulnelhaxvi" path="res://status/player_status/manager/player_status_manager.gd" id="1_gurao"]
+
+[node name="PlayerStatusManager" type="Control" node_paths=PackedStringArray("hbox_container") groups=["player_status_manager"]]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 1
+script = ExtResource("1_gurao")
+hbox_container = NodePath("MarginContainer/HBoxContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4

@@ -13,9 +13,7 @@
 [sub_resource type="Resource" id="Resource_c46e0"]
 script = ExtResource("2_vbkc7")
 resolve_name = "Spawn Point"
-effect = 0
 texture_png = ExtResource("3_hnuj4")
-tooltip = ""
 metadata/_custom_type_script = "uid://c8eqsslkb6yo1"
 
 [node name="ResolveManager" type="Control" node_paths=PackedStringArray("hbox_container", "preloader") groups=["resolve_manager"]]

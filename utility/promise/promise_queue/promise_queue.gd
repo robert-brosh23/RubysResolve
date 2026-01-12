@@ -44,7 +44,6 @@ func _process_queue() -> void:
 		var item: Promise = queue.pop_front()
 		var fn: Callable = item.callable
 		var result_signal = item.result_signal
-		print(fn.get_method())
 		
 		var result = await fn.call()
 		result_signal.emit(result)

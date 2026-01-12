@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PlayerStatusData" load_steps=3 format=3 uid="uid://25evhpuq0r7g"]
+
+[ext_resource type="Script" uid="uid://cygoi7356seyp" path="res://status/player_status/data/player_status_data.gd" id="1_c70fo"]
+[ext_resource type="Texture2D" uid="uid://dldk601ehxerq" path="res://sprites/forgot_lunch_status.png" id="2_kbql2"]
+
+[resource]
+script = ExtResource("1_c70fo")
+name = "Forgotten Lunch"
+texture_png = ExtResource("2_kbql2")
+tooltip = "The first card played today costs double."
+metadata/_custom_type_script = "uid://cygoi7356seyp"

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PlayerStatusData" load_steps=3 format=3 uid="uid://v62pdmsp1k56"]
+
+[ext_resource type="Script" uid="uid://cygoi7356seyp" path="res://status/player_status/data/player_status_data.gd" id="1_p0hq6"]
+[ext_resource type="Texture2D" uid="uid://d32r2vgf0rro" path="res://sprites/cute_dog.png" id="2_brlmh"]
+
+[resource]
+script = ExtResource("1_p0hq6")
+name = "Cute Dog"
+effect = 2
+texture_png = ExtResource("2_brlmh")
+tooltip = "Discard the next obstacle drawn."
+metadata/_custom_type_script = "uid://cygoi7356seyp"

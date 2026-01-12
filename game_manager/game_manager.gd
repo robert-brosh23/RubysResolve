@@ -15,6 +15,7 @@ var promise_queue: PromiseQueue
 var projects_manager: ProjectsManager
 var receiving_input = true
 var hours_tracker: HoursTracker
+var player_status_manager: PlayerStatusManager
 var cursor: Cursor
 var state: states = states.DEFAULT
 
@@ -55,6 +56,7 @@ func ready() -> void:
 	projects_manager = get_tree().get_first_node_in_group("projects_manager")
 	hours_tracker = get_tree().get_first_node_in_group("hours_tracker")
 	cursor = get_tree().get_first_node_in_group("cursor")
+	player_status_manager = get_tree().get_first_node_in_group("player_status_manager")
 	
 	score = 0
 	stress_accumulation = 0
@@ -81,6 +83,7 @@ func go_to_next_day() -> void:
 	receiving_input = false
 	hours_tracker.big_arrow_enabled = false
 	promise_queue.enqueue(func(): state = states.ENDING_DAY)
+	promise_queue.enqueue(func(): SignalBus.dusk_started.emit())
 	await CardsController.enqueue_discard_all_cards_from_hand()
 	await _set_stress_accumulation(stress_accumulation + stress)
 	promise_queue.enqueue(func(): state = states.DEFAULT)
@@ -93,7 +96,11 @@ func go_to_next_day() -> void:
 	SignalBus.new_day_started.emit(day)
 	receiving_input = true
 	CardsController.enqueue_draw_multiple_cards(5)
-	get_tree().create_timer(2.2).timeout.connect(func(): hours_tracker.big_arrow_enabled = true)
+	get_tree().create_timer(2.2).timeout.connect(
+		func(): 
+			if hours_tracker != null:
+				hours_tracker.big_arrow_enabled = true
+	)
 	
 func _set_stress_accumulation(value: int):
 	stress_accumulation = value
@@ -113,3 +120,6 @@ func check_win() -> bool:
 		get_tree().change_scene_to_file("res://ui/win_screen_menu/win_screen.tscn")
 		return true
 	return false
+	
+func get_player_status_manager() -> PlayerStatusManager:
+	return player_status_manager 

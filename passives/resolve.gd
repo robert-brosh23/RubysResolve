@@ -31,6 +31,5 @@ func init():
 func _on_panel_mouse_entered() -> void:
 	tooltip_container.visible = true
 
-
 func _on_panel_mouse_exited() -> void:
 	tooltip_container.visible = false

@@ -27,7 +27,7 @@ func enqueue_create_card(card_data: CardData) -> Signal:
 	var result_signal = promise_queue.enqueue_delay(.2)
 	return result_signal
 	
-func _create_card(card_data: CardData, spawn_pos: Vector2 = Vector2(300,100), pause_time := 0.0, discard := false) -> Card:
+func _create_card(card_data: CardData, spawn_pos: Vector2 = Vector2(300,100), pause_time := 0.0, discard := false, still := false) -> Card:
 	AudioPlayer.play_sound(sound_discard_card)
 	var card = Card.create_card(card_data)
 	card.global_position = spawn_pos
@@ -43,8 +43,6 @@ func _create_card(card_data: CardData, spawn_pos: Vector2 = Vector2(300,100), pa
 ## Creates new cards and adds them to the deck.
 func enqueue_create_cards(card_datas: Array[CardData]) -> Signal:
 	var result_signal: Signal
-	#for card_data in card_datas:
-		#result_signal = enqueue_create_card(card_data) # save the last one
 	for i in range(0, card_datas.size() - 1):
 		enqueue_create_card(card_datas[i])
 	return enqueue_create_card(card_datas[card_datas.size()-1])
@@ -62,6 +60,7 @@ func draw_card_from_deck() -> void:
 	if card == null:
 		return
 	hand.add_card(card)
+	SignalBus.card_drawn.emit(card)
 	hours_tracker._check_cards_playable(null, null)
 	
 func peek_at_top_card_of_deck() -> Card:
@@ -139,7 +138,6 @@ func enqueue_select_cards(num_cards: int, conditions: Array[Callable] = []) -> A
 	var result_signal = promise_queue.enqueue(select_cards.bind(num_cards, conditions))
 	promise_queue.enqueue_delay(.2)
 	var result = await result_signal
-	print(result)
 	return result
 	
 func select_cards(num_cards: int, conditions: Array[Callable] = [], card: Card = null) -> Array[Card]:
