@@ -1,10 +1,11 @@
-class_name PlayerStatus extends Control
+class_name PlayerStatus extends Effect
 
-@export var texture : TextureRect
+signal delete_status(status: PlayerStatus)
 
-@export var tooltip_container : PanelContainer
-@export var tooltip_label : Label
-@export var counter_label : Label
+@onready var texture : TextureRect = $Texture
+@onready var tooltip_container : PanelContainer = $Tooltip
+@onready var tooltip_label : Label = $Tooltip/MarginContainer/TooltipText
+@onready var counter_label : Label = $CounterLabel
 
 var status_data: PlayerStatusData
 
@@ -15,24 +16,25 @@ static func create_player_status(data: PlayerStatusData) -> PlayerStatus:
 	return instance
 	
 func _process(delta: float) -> void:
-	if status_data.counter < 2:
+	if counter < 2:
 		counter_label.visible = false
 	else:
 		counter_label.visible = true
-		counter_label.text = str(status_data.counter)
+		counter_label.text = str(counter)
 	
-func init():
+func _ready() -> void:
 	tooltip_container.visible = false
-	texture.texture = status_data.texture_png
-	status_data.get_effect_callable(status_data.effect).call()
-	tooltip_label.text = status_data.name + ": " + status_data.tooltip
-	status_data.clear_status.connect(
-		func(): 
-			queue_free()
-	)
 
 func _on_panel_mouse_entered() -> void:
 	tooltip_container.visible = true
 
 func _on_panel_mouse_exited() -> void:
 	tooltip_container.visible = false
+
+## Overridable methods
+func apply_draw_consuming_effect(card: Card) -> void:
+	pass
+
+func handle_card_drawn_impl(card: Card):
+	pass
+	

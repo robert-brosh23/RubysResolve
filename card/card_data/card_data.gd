@@ -9,7 +9,7 @@ const NO_EFFECT := "NO_EFFECT"
 
 @export var card_png: CompressedTexture2D
 
-@export var card_description: String
+@export_multiline  var card_description: String
 
 @export var card_type: CARD_TYPE
 
@@ -37,7 +37,7 @@ var effect_map: Dictionary[CARD_EFFECT, String] = {
 	CARD_EFFECT.GRIND_CREATIVITY: "_execute_grind",
 	CARD_EFFECT.GRIND_WISDOM: "_execute_grind",
 	CARD_EFFECT.COMMUNITY_SUPPORT: "_execute_community_support",
-	CARD_EFFECT.SLEEP_DEPRIVED: "_execute_sleep_deprived",
+	CARD_EFFECT.SLEEP_DEPRIVED: NO_EFFECT,
 	CARD_EFFECT.ADDICTION: NO_EFFECT,
 	CARD_EFFECT.THERAPY: "_execute_therapy",
 	CARD_EFFECT.NEW_HOBBY: "_execute_new_hobby",
@@ -142,7 +142,7 @@ var target_type_map: Dictionary[CARD_EFFECT, target_type] = {
 	CARD_EFFECT.GRIND_CREATIVITY: target_type.SINGLE,
 	CARD_EFFECT.GRIND_WISDOM: target_type.SINGLE,
 	CARD_EFFECT.COMMUNITY_SUPPORT: target_type.ALL,
-	CARD_EFFECT.SLEEP_DEPRIVED: target_type.ALL,
+	CARD_EFFECT.SLEEP_DEPRIVED: target_type.UNPLAYABLE,
 	CARD_EFFECT.ADDICTION: target_type.UNPLAYABLE,
 	CARD_EFFECT.THERAPY: target_type.ALL,
 	CARD_EFFECT.NEW_HOBBY: target_type.ALL,

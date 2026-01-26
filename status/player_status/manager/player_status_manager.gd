@@ -8,8 +8,14 @@ var statuses: Array[PlayerStatus]
 func _ready():
 	pass
 	
-func add_status(player_status_data: PlayerStatusData):
-	var new_status = PlayerStatus.create_player_status(player_status_data.duplicate(true))
+func add_status(new_status: PlayerStatus):
 	statuses.append(new_status)
-	new_status.status_data.clear_status.connect(func(): statuses.erase(new_status))
 	hbox_container.add_child(new_status)
+	new_status.delete_status.connect(delete_status)
+	
+func delete_status(status: PlayerStatus):
+	statuses.erase(status)
+	status.visible = false
+	await get_tree().create_timer(10).timeout
+	hbox_container.remove_child(status)
+	status.queue_free()

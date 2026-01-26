@@ -14,15 +14,11 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
-[node name="PlayerStatus" type="Control" node_paths=PackedStringArray("texture", "tooltip_container", "tooltip_label", "counter_label")]
+[node name="PlayerStatus" type="Control"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_8p6mx")
-texture = NodePath("Texture")
-tooltip_container = NodePath("Tooltip")
-tooltip_label = NodePath("Tooltip/MarginContainer/TooltipText")
-counter_label = NodePath("CounterLabel")
 
 [node name="Texture" type="TextureRect" parent="."]
 layout_mode = 0

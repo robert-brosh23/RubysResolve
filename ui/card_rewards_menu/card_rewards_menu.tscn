@@ -24,10 +24,10 @@
 [ext_resource type="Resource" uid="uid://bc6kekq6f0g7t" path="res://card/card_data/cards/wisdom/touch_grass.tres" id="17_hf245"]
 [ext_resource type="Resource" uid="uid://cqltrrpvk156x" path="res://card/card_data/cards/creativity/syncing_up.tres" id="18_bg1gq"]
 [ext_resource type="Resource" uid="uid://dk603xhti03hm" path="res://card/card_data/cards/obstacle/addiction.tres" id="18_jnmr4"]
-[ext_resource type="Resource" uid="uid://ba5stqt0xy1qd" path="res://card/card_data/cards/obstacle/comparison.tres" id="19_btv7j"]
+[ext_resource type="Resource" uid="uid://ehhar22l8kca" path="res://card/card_data/cards/wisdom/cute_dog.tres" id="19_hf245"]
+[ext_resource type="Resource" uid="uid://cuyftbvj6fopp" path="res://card/card_data/cards/obstacle/sleep_deprived.tres" id="20_1dew5"]
 [ext_resource type="Resource" uid="uid://hbsxvkq72uke" path="res://card/card_data/cards/obstacle/forgot_my_lunch.tres" id="20_xyrri"]
 [ext_resource type="Resource" uid="uid://coh1whm120l72" path="res://card/card_data/cards/wisdom/overcome_adversity.tres" id="24_btv7j"]
-[ext_resource type="Resource" uid="uid://dt73u1mt8nnfn" path="res://card/card_data/cards/obstacle/anxiety.tres" id="26_hf245"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kqkvr"]
 bg_color = Color(0.670588, 0.337255, 0.458824, 1)
@@ -139,13 +139,13 @@ resources = [PackedStringArray("glass_half_full", "inspired_creativity", "inspir
 process_thread_group = 2
 process_thread_group_order = 0
 process_thread_messages = 0
-resources = [PackedStringArray("friendship", "mental_health_day", "new_day", "overcome_adversity", "therapy", "touch_grass"), [ExtResource("13_qu674"), ExtResource("14_aw7qf"), ExtResource("15_ppjjt"), ExtResource("24_btv7j"), ExtResource("16_bg1gq"), ExtResource("17_hf245")]]
+resources = [PackedStringArray("cute_dog", "friendship", "mental_health_day", "new_day", "overcome_adversity", "therapy", "touch_grass"), [ExtResource("19_hf245"), ExtResource("13_qu674"), ExtResource("14_aw7qf"), ExtResource("15_ppjjt"), ExtResource("24_btv7j"), ExtResource("16_bg1gq"), ExtResource("17_hf245")]]
 
 [node name="ObstacleCardsResroucePreloader" type="ResourcePreloader" parent="."]
 process_thread_group = 2
 process_thread_group_order = 0
 process_thread_messages = 0
-resources = [PackedStringArray("addiction", "anxiety", "comparison", "forgot_my_lunch"), [ExtResource("18_jnmr4"), ExtResource("26_hf245"), ExtResource("19_btv7j"), ExtResource("20_xyrri")]]
+resources = [PackedStringArray("addiction", "forgot_my_lunch", "sleep_deprived"), [ExtResource("18_jnmr4"), ExtResource("20_xyrri"), ExtResource("20_1dew5")]]
 
 [connection signal="mouse_entered" from="MarginContainer/VBoxContainer/SkipButton" to="." method="_on_skip_button_mouse_entered"]
 [connection signal="mouse_exited" from="MarginContainer/VBoxContainer/SkipButton" to="." method="_on_skip_button_mouse_exited"]

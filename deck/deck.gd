@@ -71,6 +71,6 @@ func _update_card_number_text() -> void:
 func _update_top_card_z_index() -> void:
 	if CardsCollection.cards_in_deck.size() == 0:
 		return
-	CardsCollection.cards_in_deck[0].z_index = 1
+	CardsCollection.cards_in_deck[0].z_index = -3
 	for i in range(1, CardsCollection.cards_in_deck.size(), 1):
-		CardsCollection.cards_in_deck[i].z_index = 0
+		CardsCollection.cards_in_deck[i].z_index = -4

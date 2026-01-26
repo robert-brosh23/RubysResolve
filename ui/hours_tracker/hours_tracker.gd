@@ -15,7 +15,7 @@ var big_arrow_enabled := false:
 			big_arrow.visible = false
 			return
 		if value:
-			_check_cards_playable(null, null)
+			check_cards_playable(null, null)
 		else:
 			big_arrow.visible = false
 			
@@ -25,14 +25,19 @@ func _ready() -> void:
 	big_arrow.visible = false
 	animation_player.play("wave_arrow")
 	cursor = get_tree().get_first_node_in_group("cursor")
+	call_deferred("_connect_signals")
 	
-	SignalBus.card_played.connect(_check_cards_playable)
-	SignalBus.new_day_started.connect(func(day: int): 
-		#await get_tree().create_timer(1.0).timeout
-		_check_cards_playable(null, null)
-	)
+func _connect_signals():
+	if not SignalBus.card_played.is_connected(check_cards_playable):
+		SignalBus.card_played.connect(check_cards_playable)
+	if not SignalBus.card_drawn.is_connected(handle_card_drawn):
+		SignalBus.card_played.connect(handle_card_drawn)
+		
+func handle_card_drawn(c: Card = null, project: Project = null):
+	if c.card_data.card_type != CardData.CARD_TYPE.OBSTACLE:
+		check_cards_playable(c, project)
 			
-func _check_cards_playable(c: Card, project: Project):
+func check_cards_playable(c: Card = null, project: Project = null):
 	for card in CardsCollection.cards_in_hand:
 		if card != c && card.card_data.get_target_type() != CardData.target_type.UNPLAYABLE && card.cost <= GameManager.hours:
 			big_arrow.visible = false
@@ -44,6 +49,7 @@ func _on_end_day_button_pressed() -> void:
 		return
 	big_arrow.visible = false
 	GameManager.go_to_next_day()
+	
 	
 func set_hours_label(hours: int):
 	hours_label.text = "Hours: " + str(hours)

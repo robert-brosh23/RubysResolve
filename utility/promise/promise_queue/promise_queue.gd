@@ -53,6 +53,12 @@ func _process_queue() -> void:
 func unpause_after_delay(delay: float) -> void:
 	await tree.create_timer(delay * Globals.animation_speed_scale).timeout
 	paused -= 1
+	
+func pause_queue_and_do_things(callables: Array[Callable]):
+	paused += 1
+	for callable in callables:
+		await callable.call()
+	paused -= 1
 
 func _on_queue_finished() -> void:
 	pass

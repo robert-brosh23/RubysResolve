@@ -6,12 +6,11 @@
 [resource]
 script = ExtResource("1_anscm")
 card_name = "Sleep Deprived"
-card_cost = 2
+card_cost = -1
 card_png = ExtResource("1_du1bu")
-card_description = "Delete this card from your deck."
+card_description = "Unplayable."
 card_type = 3
 card_effect = 14
 title_font = 0
-desc_line_spacing = -2
 card_title_offset = 8
 metadata/_custom_type_script = "uid://bevi4n8n1jvud"

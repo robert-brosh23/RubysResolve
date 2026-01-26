@@ -6,9 +6,9 @@
 [resource]
 script = ExtResource("1_pnmgc")
 card_name = "Cute Dog"
-card_cost = 2
+card_cost = 1
 card_png = ExtResource("1_m31iy")
-card_description = "Discard the next obstacle drawn."
+card_description = "Discard the next obstacle drawn, and draw another card."
 card_type = 2
 card_effect = 31
 metadata/_custom_type_script = "uid://bevi4n8n1jvud"

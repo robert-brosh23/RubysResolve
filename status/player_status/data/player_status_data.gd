@@ -38,6 +38,7 @@ func _activate_cute_dog(card: Card):
 		return
 
 	CardsController._discard_card_from_hand(card)
+	CardsController.draw_card_from_deck()
 	for connection in SignalBus.card_drawn.get_connections():
 		var callable : Callable = connection["callable"]
 		if callable.get_method() == "_activate_cute_dog":
@@ -54,7 +55,7 @@ func _create_forgot_lunch():
 
 func _create_addiction():
 	SignalBus.new_day_started.connect(
-		func(day: int): GameManager.hours -= 3, CONNECT_ONE_SHOT
+		func(day: int): GameManager.hours -= 1, CONNECT_ONE_SHOT
 	)
 	SignalBus.dusk_started.connect(
 		func(): clear_status.emit(), CONNECT_ONE_SHOT

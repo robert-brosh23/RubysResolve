@@ -9,6 +9,9 @@ const MAX_STRESS_ACCUMULATION := 100
 
 @export var card_data_actual_starting: Array[CardData]
 
+@onready var dice_controller: DiceController = $DiceController
+@onready var event_dispatcher: EventDispatcher = $EventDispatcher
+
 var main_ui: MainUi
 var card_rewards_menu: CardRewardsMenu
 var promise_queue: PromiseQueue
@@ -92,15 +95,11 @@ func go_to_next_day() -> void:
 	
 	if main_ui.check_game_over():
 		return
+	stress += 20
 	hours = STARTING_HOURS
 	SignalBus.new_day_started.emit(day)
 	receiving_input = true
 	CardsController.enqueue_draw_multiple_cards(5)
-	get_tree().create_timer(2.2).timeout.connect(
-		func(): 
-			if hours_tracker != null:
-				hours_tracker.big_arrow_enabled = true
-	)
 	
 func _set_stress_accumulation(value: int):
 	stress_accumulation = value
@@ -122,4 +121,7 @@ func check_win() -> bool:
 	return false
 	
 func get_player_status_manager() -> PlayerStatusManager:
-	return player_status_manager 
+	return player_status_manager
+	
+func roll_die() -> int:
+	return await dice_controller.roll()

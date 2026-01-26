@@ -8,5 +8,5 @@ script = ExtResource("1_b4bhn")
 name = "Addicted"
 effect = 1
 texture_png = ExtResource("2_dnsq6")
-tooltip = "You have 3 less hours today."
+tooltip = "You have 1 less hours today."
 metadata/_custom_type_script = "uid://cygoi7356seyp"

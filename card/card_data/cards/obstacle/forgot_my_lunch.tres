@@ -8,7 +8,8 @@ script = ExtResource("1_vwswr")
 card_name = "Forgot my Lunch"
 card_cost = -1
 card_png = ExtResource("1_3h66c")
-card_description = "Dusk: The next card you play costs double"
+card_description = "Unplayable.
+Dusk: The next card you play costs double"
 card_type = 3
 card_effect = 18
 title_font = 0

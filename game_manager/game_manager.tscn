@@ -1,24 +1,30 @@
-[gd_scene load_steps=11 format=3 uid="uid://csdmhd25lpc0t"]
+[gd_scene load_steps=9 format=3 uid="uid://csdmhd25lpc0t"]
 
 [ext_resource type="Script" uid="uid://dnck5k1v8qlla" path="res://game_manager/game_manager.gd" id="1_ong7i"]
 [ext_resource type="Script" uid="uid://bevi4n8n1jvud" path="res://card/card_data/card_data.gd" id="2_q7vcu"]
-[ext_resource type="Resource" uid="uid://hbsxvkq72uke" path="res://card/card_data/cards/obstacle/forgot_my_lunch.tres" id="3_kkxic"]
-[ext_resource type="Resource" uid="uid://dk603xhti03hm" path="res://card/card_data/cards/obstacle/addiction.tres" id="4_d3erd"]
 [ext_resource type="Resource" uid="uid://bstx5n1bv73t2" path="res://card/card_data/cards/creativity/grind.tres" id="5_2631c"]
-[ext_resource type="Resource" uid="uid://dmb3ppe5ys6wu" path="res://card/card_data/cards/creativity/small_step.tres" id="6_d3erd"]
 [ext_resource type="Resource" uid="uid://cuyftbvj6fopp" path="res://card/card_data/cards/obstacle/sleep_deprived.tres" id="6_kkxic"]
 [ext_resource type="Resource" uid="uid://bc6kekq6f0g7t" path="res://card/card_data/cards/wisdom/touch_grass.tres" id="7_d3erd"]
 [ext_resource type="Resource" uid="uid://ehhar22l8kca" path="res://card/card_data/cards/wisdom/cute_dog.tres" id="7_eesdg"]
-[ext_resource type="Resource" uid="uid://dt73u1mt8nnfn" path="res://card/card_data/cards/obstacle/anxiety.tres" id="8_fjsdi"]
+[ext_resource type="PackedScene" uid="uid://dg5ot8ofth4qe" path="res://dice/dice_controller.tscn" id="7_fjsdi"]
+[ext_resource type="PackedScene" uid="uid://cq6tsyde87vw8" path="res://utility/game_event/dispatcher/event_dispatcher.tscn" id="8_fjsdi"]
 
 [node name="GameManager" type="Control" groups=["game_manager"]]
-z_index = 2
+z_index = 100
 layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
+offset_left = -335.0
+offset_top = 219.0
+offset_right = -335.0
+offset_bottom = 219.0
 grow_horizontal = 0
 script = ExtResource("1_ong7i")
-card_data_debug = Array[ExtResource("2_q7vcu")]([ExtResource("3_kkxic"), ExtResource("3_kkxic"), ExtResource("4_d3erd"), ExtResource("7_eesdg"), ExtResource("7_eesdg"), ExtResource("7_eesdg"), ExtResource("6_d3erd"), ExtResource("6_d3erd"), ExtResource("6_d3erd"), ExtResource("6_d3erd")])
+card_data_debug = Array[ExtResource("2_q7vcu")]([ExtResource("7_eesdg"), ExtResource("7_eesdg"), ExtResource("7_eesdg"), ExtResource("6_kkxic"), ExtResource("6_kkxic"), ExtResource("6_kkxic")])
 debug_enabled = true
-card_data_actual_starting = Array[ExtResource("2_q7vcu")]([ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("7_d3erd"), ExtResource("6_kkxic"), ExtResource("6_kkxic"), ExtResource("6_kkxic"), ExtResource("8_fjsdi")])
+card_data_actual_starting = Array[ExtResource("2_q7vcu")]([ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("7_d3erd"), ExtResource("6_kkxic"), ExtResource("5_2631c"), ExtResource("5_2631c"), ExtResource("5_2631c")])
+
+[node name="DiceController" parent="." instance=ExtResource("7_fjsdi")]
+
+[node name="EventDispatcher" parent="." instance=ExtResource("8_fjsdi")]

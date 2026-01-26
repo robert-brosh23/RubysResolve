@@ -120,9 +120,9 @@ func get_project_resource(grid_index : int) -> ProjectResource:
 	if proj_type == ProjectResource.project_type.OBSTACLE:
 		new_project_resource = phase1_obstacle_preloader.get_resource("obstacle_test1").duplicate()
 		if new_project_resource is ProjectResource:
-			new_project_resource.targetProgress = 10 + (GameManager.day / 5) * 5 + (resolution_projects_finished * 15)
+			new_project_resource.targetProgress = 10 + (GameManager.day / 5) * 5
 	else:
-		var target_hours : int = 4 + (GameManager.day / 5) * 2 + projects_finished
+		var target_hours : int = 4 + (GameManager.day / 5) * 2
 		match proj_type:
 			ProjectResource.project_type.CREATIVITY:
 				if !phase1_creativity_resources_pool.is_empty():

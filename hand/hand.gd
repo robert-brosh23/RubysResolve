@@ -79,7 +79,7 @@ func select_cards(max_cards: int, conditions: Array[Callable] = [], played_card 
 	selecting_cards_container.visible = false
 	state = states.READY
 	_update_hand()
-	hours_tracker._check_cards_playable(null, null)
+	hours_tracker.check_cards_playable(null, null)
 	return dup
 	
 	

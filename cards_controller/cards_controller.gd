@@ -27,7 +27,7 @@ func enqueue_create_card(card_data: CardData) -> Signal:
 	var result_signal = promise_queue.enqueue_delay(.2)
 	return result_signal
 	
-func _create_card(card_data: CardData, spawn_pos: Vector2 = Vector2(300,100), pause_time := 0.0, discard := false, still := false) -> Card:
+func _create_card(card_data: CardData, spawn_pos: Vector2 = Vector2(300,100), pause_time := 0.0, discard := false, shuffle := false) -> Card:
 	AudioPlayer.play_sound(sound_discard_card)
 	var card = Card.create_card(card_data)
 	card.global_position = spawn_pos
@@ -38,6 +38,8 @@ func _create_card(card_data: CardData, spawn_pos: Vector2 = Vector2(300,100), pa
 		discard_pile.add_card(card)
 	else:
 		deck.add_card(card)
+		if shuffle:
+			await _shuffle_deck()
 	return card
 
 ## Creates new cards and adds them to the deck.
@@ -60,8 +62,12 @@ func draw_card_from_deck() -> void:
 	if card == null:
 		return
 	hand.add_card(card)
-	SignalBus.card_drawn.emit(card)
-	hours_tracker._check_cards_playable(null, null)
+	#SignalBus.card_drawn.emit(card)
+	var effects: Array[Effect] = []
+	for status in GameManager.player_status_manager.statuses:
+		effects.append(status)
+	
+	GameManager.event_dispatcher.dispatch_event(CardDrawnEvent.create_card_drawn_event(card), effects)
 	
 func peek_at_top_card_of_deck() -> Card:
 	if CardsCollection.cards_in_deck.is_empty() and !CardsCollection.cards_in_discard_pile.is_empty():
@@ -89,7 +95,6 @@ func enqueue_shuffle_deck() -> Signal:
 	return result_signal
 	
 func _shuffle_deck() -> void:
-	hours_tracker.big_arrow_enabled = false
 	promise_queue.paused += 1
 	await get_tree().create_timer(0.5).timeout
 	AudioPlayer.play_sound(shuffle_sfx)
@@ -97,7 +102,6 @@ func _shuffle_deck() -> void:
 	deck.shuffle_deck()
 	await get_tree().create_timer(1.0).timeout
 	deck.shuffling_label.visible = false
-	hours_tracker.big_arrow_enabled = true
 	promise_queue.paused -= 1
 
 

@@ -5,11 +5,13 @@
 
 [resource]
 script = ExtResource("1_nx851")
-card_name = "Addiction"
+card_name = "Phone Addiction"
 card_cost = -1
 card_png = ExtResource("1_xxdg1")
-card_description = "Dusk: Reduce hours by 3."
+card_description = "Unplayable.
+Dusk: Reduce hours by 1."
 card_type = 3
 card_effect = 15
+title_font = 0
 card_title_offset = 10
 metadata/_custom_type_script = "uid://bevi4n8n1jvud"

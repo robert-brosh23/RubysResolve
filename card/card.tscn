@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bu8nv7leim8od"]
+[gd_scene load_steps=19 format=3 uid="uid://bu8nv7leim8od"]
 
 [ext_resource type="Script" uid="uid://b4h4dbu2ryb06" path="res://card/card.gd" id="1_ply2h"]
 [ext_resource type="Texture2D" uid="uid://djnq5q44dua12" path="res://sprites/meditation.png" id="2_1n6wr"]
@@ -28,6 +28,8 @@ expand_margin_left = 1.0
 expand_margin_right = 1.0
 expand_margin_bottom = 2.0
 anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ags6k"]
 
 [sub_resource type="Animation" id="Animation_ags6k"]
 length = 0.001
@@ -220,7 +222,7 @@ theme_override_constants/margin_bottom = 8
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -284,12 +286,16 @@ layout_mode = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
-[node name="PanelContainer" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("6_6xkbt")
 
-[node name="TextureRect" type="TextureRect" parent="Panel/MarginContainer/VBoxContainer/PanelContainer"]
+[node name="TextureRect" type="TextureRect" parent="Panel/MarginContainer/VBoxContainer/MarginContainer/PanelContainer"]
 custom_minimum_size = Vector2(1, 46)
 layout_mode = 2
 
@@ -300,6 +306,7 @@ theme_override_colors/font_color = Color(0.670588, 0.337255, 0.458824, 1)
 theme_override_constants/line_spacing = -2
 theme_override_fonts/font = ExtResource("2_trrkg")
 theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ags6k")
 text = "This is a description. Lots of things to describe here."
 horizontal_alignment = 1
 vertical_alignment = 1

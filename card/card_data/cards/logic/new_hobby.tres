@@ -6,12 +6,9 @@
 [resource]
 script = ExtResource("1_xf54c")
 card_name = "New Hobby"
-card_cost = 2
+card_cost = 4
 card_png = ExtResource("1_2imwq")
 card_description = "Transform a non-obstacle card and immediately activate its effect"
-card_type = 0
 card_effect = 17
-title_font = 1
-desc_line_spacing = -2
 card_title_offset = 6
 metadata/_custom_type_script = "uid://bevi4n8n1jvud"

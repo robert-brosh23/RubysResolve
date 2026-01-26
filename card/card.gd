@@ -14,7 +14,7 @@ const OBSTACLE_STYLEBOX_PATH = "res://card/card_data/styles/stylebox/obstacle_st
 const OBSTACLE_STYLEBOX_IMAGE_FRAME_PATH = "res://card/card_data/styles/stylebox/image_frame_obstacle_stylebox.tres"
 const FACE_DOWN_CARD_STYLEBOX_PATH = "res://card/card_data/styles/stylebox/face_down_card_stylebox.tres"
 
-const FRIENDSHIP_INCREASE := .03
+const FRIENDSHIP_INCREASE := .04
 
 @export var card_data: CardData
 @export var movement_tween_manager: MovementTweenManager
@@ -22,11 +22,11 @@ var game_manager: GameManager
 
 @onready var panel: Panel = $Panel
 @onready var margin_container = $Panel/MarginContainer
-@onready var panel_container = $Panel/MarginContainer/VBoxContainer/PanelContainer
+@onready var panel_container = $Panel/MarginContainer/VBoxContainer/MarginContainer/PanelContainer
 @onready var title_label = $Panel/MarginContainer/VBoxContainer/HBoxContainer/TitleLabel
-@onready var texture_label = $Panel/MarginContainer/VBoxContainer/PanelContainer/TextureRect
+@onready var texture_label = $Panel/MarginContainer/VBoxContainer/MarginContainer/PanelContainer/TextureRect
 @onready var description_label = $Panel/MarginContainer/VBoxContainer/DescriptionLabel
-@onready var animation_player = $AnimationPlayer
+@onready var animation_player : AnimationPlayer = $AnimationPlayer
 @onready var cost_panel_margin_container = $Panel/MarginContainer/VBoxContainer/HBoxContainer/CostPanelMarginContainer
 @onready var cost_label = $Panel/MarginContainer/VBoxContainer/HBoxContainer/CostPanelMarginContainer/CostPanel/CostLabel
 @onready var dusk_animation_border = $Panel/DuskAnimationBorder
@@ -54,7 +54,7 @@ var description: String:
 		description = value
 		description_label.text = value
 
-var friendship_amount: float = .15
+var friendship_amount: float = .3
 
 var delete_sound := preload("res://audio/sfx/110931__chrisw92__error2.wav")
 
@@ -107,7 +107,7 @@ func play_card(target: Project) -> bool:
 	game_manager.hours -= cost
 	await play_card_effect(target)
 	print (card_data.card_name, " was played.")
-	hours_tracker._check_cards_playable(self, target)
+	# hours_tracker.check_cards_playable(self, target)
 	return true
 	
 func delete_card() -> void:
@@ -366,7 +366,7 @@ func _execute_small_step(target: Project):
 	target.add_step_and_progress()
 	
 func _execute_touch_grass():
-	var amount: int = GameManager.stress * 0.2
+	var amount: int = GameManager.stress * 0.4
 	
 	cursor.play_message("-" + str(amount) + " Stress")
 	GameManager.stress -= amount
@@ -378,7 +378,9 @@ func _execute_friendship():
 		cursor.play_message("Friendship improved :)")
 		cursor.play_message("-" + str(amount) + " Stress")
 		friendship_amount += FRIENDSHIP_INCREASE
-		description = "Reduce stress by " + str(int(friendship_amount * 100)) + "%, then permanently increase this amount by 3%."
+		description = ("Reduce stress by " + str(int(friendship_amount * 100)) +
+				"%, then permanently increase this amount by " + str(FRIENDSHIP_INCREASE) + "%.")
+		
 		
 func _execute_grind(target: Project):
 	target.progress(2)
@@ -494,6 +496,7 @@ func _execute_strong_start(target: Project):
 func _execute_revision(target: Project):
 	cursor.play_message("Let's change things around")
 	var split_progress = target.current_progress / (projects_manager.projects.size() - 1)
+	split_progress = 10
 	target.set_progress(0)
 	for i in range (projects_manager.projects.size() - 1, -1, -1):
 		if projects_manager.projects[i] == target:
@@ -501,7 +504,11 @@ func _execute_revision(target: Project):
 		await projects_manager.projects[i].progress(split_progress)
 		
 func _execute_syncing_up(target: Project):
-	target.progress(3)
+	var amount = await GameManager.roll_die()
+	if target == null:
+		return
+		
+	target.progress(amount)
 	if target == null || !target.active:
 		return
 		
@@ -551,11 +558,10 @@ func _execute_sleep_deprived():
 	
 func _execute_walk_the_dog():
 	cursor.play_message("Let's go, Butters.")
-	for status in player_status_manager.statuses:
-		if status.status_data.effect == PlayerStatusData.player_status_effect.CUTE_DOG:
-			status.status_data.counter += 1
-			return
-	player_status_manager.add_status(load("res://status/player_status/data/statuses/cute_dog.tres") as PlayerStatusData)
+	
+	var cute_dog_status = CuteDogStatus.create_cute_dog_status()
+	if cute_dog_status != null:
+		player_status_manager.add_status(cute_dog_status)
 	
 func _draw_effect_anxiety():
 	cursor.play_message("+10 Stress (Anxiety)")
@@ -563,7 +569,7 @@ func _draw_effect_anxiety():
 	
 func _dusk_effect_forgot_my_lunch():
 	cursor.play_message("Forgot my lunch :(")
-	player_status_manager.add_status(load("res://status/player_status/data/statuses/forgot_lunch.tres") as PlayerStatusData)
+	#player_status_manager.add_status(load("res://status/player_status/data/statuses/forgot_lunch.tres") as PlayerStatusData)
 	
 func _dusk_effect_anxiety():
 	cursor.play_message("+10 Stress (Anxiety)")
@@ -575,8 +581,8 @@ func _dusk_effect_comparison():
 	await projects_manager.projects[randi() % projects_manager.projects.size()].progress(3)
 	
 func _dusk_effect_addiction():
-	cursor.play_message("-3 Hours (Addiction)")
-	player_status_manager.add_status(load("res://status/player_status/data/statuses/addiction.tres") as PlayerStatusData)
+	cursor.play_message("-1 Hours (Addiction)")
+	#player_status_manager.add_status(load("res://status/player_status/data/statuses/addiction.tres") as PlayerStatusData)
 	
 func _on_panel_mouse_entered() -> void:
 	if state == states.READY || state == states.DRAGGING || state == states.PREVIEW_PICKING || state == states.RETURNING:

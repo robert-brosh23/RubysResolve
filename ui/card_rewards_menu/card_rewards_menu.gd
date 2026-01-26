@@ -66,7 +66,7 @@ func _process(delta: float) -> void:
 func add_random_obstacle_card_to_deck() -> void:
 	var pick = obstacle_card_resources_pool[randi() % obstacle_card_resources_pool.size()]
 	var card = Card.create_card(pick)
-	await CardsController._create_card(card.card_data, Vector2(580,220), 2.0)
+	await CardsController._create_card(card.card_data, Vector2(580,220), 2.0, false, true)
 
 func create_card_preview(card_data: CardData) -> Card:
 	return Card.create_card(card_data)
