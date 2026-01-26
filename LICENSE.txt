@@ -1,4 +1,4 @@
-Copyright © 2025 Robert Brosh. All rights reserved.
+Copyright © 2025-2026 Robert Brosh. All rights reserved.
 
 This software, including all code, assets, artwork, music, and other content (collectively, “the Software”), is the exclusive property of Robert Brosh.
 
